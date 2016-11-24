@@ -16,9 +16,8 @@ public:
 	virtual void fillBlock(std::string** board)=0;
 	virtual void drop(std::map<std::string, int> returnRows, std::string** board)=0;  //This is still incomplete.
 	virtual std::map<std::string, int> updateRows(std::map<std::string, int> returnRows, std::string** board)=0;	
-	int lowestRow(std::map<std::string, int> returnRows);	
-//virtual void left();
-	//virtual void right();
-	//virtual void down();
+	virtual void left(std::string** board)=0;
+	virtual void right(std::string **board)=0;
+	virtual void down(std::string **board)=0;
 };
 #endif

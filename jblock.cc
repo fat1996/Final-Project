@@ -5,8 +5,28 @@
 #include "coordinate.h"
 #include "jblock.h"
 
-//const int bottomRow=14;
+const int bottomRow=14;
+const int leftBorder=0;
+const int rightBorder=11;
 using namespace std;
+
+//helper fn for drop and down.
+//when you calculate a new set of coordinates, you have to see if those new coordinates are already the old coordinates of the block(in cases of overlap).
+//this function returns true if the new coordinates have an overlap with the old coordinates of the block.
+bool jblock::isPresent(int x, int y){
+bool present=false;
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+	int x1=c->getX(c);
+	int y1=c->getY(c);
+	if(x==x1 && y==y1){
+	cout<<x<<", "<<y<<" is already present"<<endl;
+	present=true;
+	break;
+}
+}
+return present;
+}
 
 jblock::~jblock(){
 for(int i=0;i<4;i++){
@@ -14,39 +34,136 @@ delete blockCoord[i];
 }
 }
 
-int jblock::lowestRow(map<string, int> returnRows){
-int row=0;
-int emptyRows=0;
-int pfRows=0;
+void jblock::left(string** board){
+//you need to determine the left-most x-coordinate.
 
-for(map<string, int>::iterator it=returnRows.begin(); it!=returnRows.end(); it++){
-cout<<"Row: "<<it->first<<", "<<it->second<<endl;
+int minX;
+int index=0;  //index at which the smallest x is.
+//determining the leftmost x-coord(the smallest value of x).
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+int x=c->getY(c);  
 
-int index;
-string s=it->first;
-stringstream ss(s);
-ss>>index;
-cout<<"EmptyRows: "<<index<<endl;
-
-if(it->second==0){
-if(emptyRows<index) emptyRows=index;
-}
-else if(it->second==1){
-if(pfRows<index) pfRows=index;
-}
-}
-
-cout<<"emptyRows: "<<emptyRows<<", pfRows: "<<pfRows<<endl;
-
-if(emptyRows>pfRows){
-row=emptyRows;
-}
+if(i==0) minX=x;
 else{
-row=pfRows;
+if(x<minX){
+ minX=x;
+index=i;
 }
-cout<<"Returning: "<<row<<endl;
-return row;
+} }
+cout<<"minX: "<<minX<<", index: "<<index<<endl;
+
+if(minX==leftBorder){} //move cannot be made. 
+else{  
+Coordinate *c=blockCoord[index];  
+int x=c->getX(c);
+int y=c->getY(c);
+y=y-1;
+if(board[x][y]==" "){   //perfect fit.
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+int x=c->getX(c);
+int y=c->getY(c);
+board[x][y]=" ";
+y=y-1;
+blockCoord[i]=new Coordinate;
+blockCoord[i]->setCoord(x, y);
 }
+}
+}
+}
+
+void jblock::right(string** board){
+//you need to determine the left-most x-coordinate.
+
+int maxX;
+int index=0;
+//determining the rightmost x-coord(the largest value of x).
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+int y=c->getY(c);
+
+if(i==0) maxX=y;
+else{
+if(y>maxX) {
+maxX=y;
+index=i;
+} } }
+cout<<"maxX: "<<maxX<<", index: "<<index<<endl;
+
+if(maxX==rightBorder){} //move cannot be made.
+else{  //move can be made, but you need to check if the cell next to the rightmost edge of the block is empty or not.
+Coordinate *c=blockCoord[index];  //replace with a const.
+int x=c->getX(c);
+int y=c->getY(c);
+y=y+1;
+
+if(board[x][y]==" "){
+cout<<"We have a perfect fit!"<<endl;
+//new coordinates created.
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+int x=c->getX(c);
+int y=c->getY(c);
+board[x][y]=" ";
+y=y+1;
+blockCoord[i]=new Coordinate;
+blockCoord[i]->setCoord(x, y);
+}}}}
+
+void jblock::down(string** board){
+//you need to determine the bottom-most x-coordinate.
+
+int maxX;
+//int index=0;
+//determining the bottommost x-coord(the largest value of x).
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+int y=c->getY(c);
+
+if(i==0) maxX=y;
+else{
+if(y>maxX) {
+maxX=y;
+//index=i;
+} } }
+cout<<"maxX: "<<maxX<<endl;
+
+if(maxX==bottomRow){} //move cannot be made.
+else{  //move can be made, but you need to check if the 4 cells of the block can shift down completely.
+	//this will invoke isPresent as well.
+
+//int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
+//cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
+
+int count=0;  
+cout<<"New coordinates: "<<endl;
+//determine the new coordinates.
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int newX=x+1;
+int y=c->getY(c);  //y-coord stays the same.
+cout<<j<<": "<<newX<<", "<<y<<endl;
+
+bool Present=isPresent(newX, y);  //helper fn called.
+//now, we have a new set of coordinates. check if these coordinates are empty. if yes, drop. if not, do the same process for a diff index(i).
+if(board[newX][y]==" " || Present==true) ++count;
+cout<<"Count: "<<count<<endl;
+}
+
+cout<<"count: "<<count<<endl;
+if(count==4){   //If count==4(perfect fit), then you have to set the new co-ordinates.
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+int newX=x+1;
+board[x][y]=" ";  //the previous coordinates of the block are set to empty.
+blockCoord[j]=new Coordinate;
+blockCoord[j]->setCoord(newX, y);
+}}}}
+
 
 map<string, int> jblock::updateRows(map<string, int> returnRows, string** board) {
 for(int i=0;i<15;i++){
@@ -71,17 +188,21 @@ returnRows[to_string(i)]=1;
 return returnRows;
 }
 
+
+
+
+
+
 //the bottom-most row is the one with the highest index.
 void jblock::drop(map<string, int> returnRows, string** board) {
-int bottomRow=lowestRow(updateRows(returnRows, board));
-cout<<"bottomRow: "<<bottomRow<<endl;
-
+returnRows=updateRows(returnRows, board);
 
 //Iterate through the map of rows, to check if the bottommost row is empty or not.
 for(int i=bottomRow;i>=0;i--) 
 {
 string index=to_string(i);
 cout<<"Index: "<<index<<endl;
+
 if(returnRows[index]==1)  //not completely filled.
 {
 cout<<"Row "<<i<<" is not completely filled."<<endl;
@@ -94,29 +215,42 @@ Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 if(x>maxRow){
 maxRow=x;
-}
-}
+} }
 
-int delta=bottomRow-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-cout<<"Delta: "<<delta<<endl;
-  
+int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
+cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
+
+int count=0;  
+cout<<"New coordinates: "<<endl;
 //determine the new coordinates.
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
 int newX=x+delta;
 int y=c->getY(c);  //y-coord stays the same.
-if(board[newX][y]==" "){ }
-else {
-	break;
+cout<<j<<": "<<newX<<", "<<y<<endl;
+
+bool Present=isPresent(newX, y);  //helper fn called.
+//now, we have a new set of coordinates. check if these coordinates are empty. if yes, drop. if not, do the same process for a diff index(i).
+if(board[newX][y]==" " || Present==true) ++count;
+cout<<"Count: "<<count<<endl;
 }
-if(j==3){   //all 4 cells are empty.
-cout<<"Index: "<<x<<", "<<y<<" set to empty"<<endl;	
+
+cout<<"count: "<<count<<endl;
+if(count==4){
+//If count==3(perfect fit), then you have to set the new co-ordinates.
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+int newX=x+delta;
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
-	blockCoord[j]=new Coordinate;
-	blockCoord[j]->setCoord(newX, y);
+blockCoord[j]=new Coordinate;
+blockCoord[j]->setCoord(newX, y);
 }
+break;
 }
+
 }
 
 else if(returnRows[to_string(i)]==2)  //completely filled.
@@ -124,6 +258,8 @@ else if(returnRows[to_string(i)]==2)  //completely filled.
 cout<<"Row "<<i<<" is completely filled."<<endl;
 }
 
+
+/*******************************************************************************************/
 else {  //completely empty(0).
 cout<<"Row "<<i<<" is completely empty."<<endl;
 int maxRow=0;
@@ -137,23 +273,24 @@ if(x>maxRow){
 maxRow=x;
 }
 }
-
-
-int delta=bottomRow-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
+int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
 cout<<"Delta: "<<delta<<endl;
 
+cout<<"Previous coord: "<<endl;
 //set the new coordinates.
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
 int newX=x+delta;
 int y=c->getY(c);  //y-coord stays the same.
+cout<<j<<": "<<x<<", "<<y<<endl;
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 blockCoord[j]=new Coordinate;
 blockCoord[j]->setCoord(newX, y);
 }
 break;
 }
+/*******************************************************************************************/
 }
 }
 
