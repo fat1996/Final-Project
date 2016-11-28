@@ -4,19 +4,83 @@
 
 using namespace std;
 
-map<string, int> zblock::updateRows(map<string, int> returnRows, string** board) {
-for(int i=0;i<15;i++){
-	for(int j=0;j<11;j++){
-		cout<<board[i][j];
-	}
-	cout<<endl;
+void zblock::clockwise(string** board){
+cout<<"Current state of block: "<<state<<endl;
+
+if(state==1){
+cout<<"Current coordinates: "<<endl;
+Coordinate *c=blockCoord[0];
+int x=c->getX(c);
+int y=c->getY(c);
+for(int i=1;i<4;i++){
+Coordinate *d=blockCoord[i];
+int x1=d->getX(d);
+int y1=d->getY(d);
+if(x1<x && y1<y){
+x=x1;
+y=y1;
 }
-return returnRows;
+}
+cout<<"Carried over: "<<x<<", "<<y<<endl;
+carriedOver->setCoord(x, y);
+
+//you know what the new set of coordinates are going to be.
+//1st, check if those blocks are empty.
+if((board[x][y]==" " || isPresent(x, y)==true) && 
+	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
+	(board[x+1][y]==" " || isPresent(x+1, y)==true) && 
+	(board[x-1][y+1]==" " || isPresent(x-1, y+1)==true)){
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+board[x][y]=" ";  //the previous coordinates of the block are set to empty.
+}
+blockCoord[0]->setCoord(x, y);
+blockCoord[1]->setCoord(x, y+1);
+blockCoord[2]->setCoord(x+1, y);
+blockCoord[3]->setCoord(x-1, y+1);
+state=2;
+}
 }
 
-void zblock::drop(map<string, int> returnRows, string** board) {}
+else if(state==2){
+int x=carriedOver->getX(carriedOver);
+int y=carriedOver->getY(carriedOver);
 
-void zblock::fillBlock(string** board){
+cout<<"State: "<<state<<", carriedOver: "<<x<<", "<<y<<endl;
+
+//you know what the new set of coordinates are going to be.
+//1st, check if those blocks are empty.
+if((board[x][y]==" " || isPresent(x, y)==true) && 
+	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
+	(board[x+1][y+1]==" " || isPresent(x+1, y+1)==true) && 
+	(board[x+1][y+2]==" " || isPresent(x+1, y+2)==true)){
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+board[x][y]=" ";  //the previous coordinates of the block are set to empty.
+}
+blockCoord[0]->setCoord(x, y);
+blockCoord[1]->setCoord(x, y+1);
+blockCoord[2]->setCoord(x+1, y+1);
+blockCoord[3]->setCoord(x+1, y+2);
+state=1;
+}
+}
+}
+
+void zblock::anticlockwise(string** board){
+if(state==1){  
+	this->clockwise(board);
+}
+else if(state==2){  
+	this->clockwise(board);
+}
+}
+
+void zblock::updateBoard(string** board){
 for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
@@ -26,22 +90,29 @@ board[x][y]="Z";
 }
 }
 
-void zblock::initialize(){
+void zblock::initialize(string** board){
+state=1;
+carriedOver=new Coordinate;
 blockCoord[0]=new Coordinate;
-blockCoord[0]->setCoord(0, 0);
+blockCoord[0]->setCoord(3, 0);
 
 blockCoord[1]=new Coordinate;
-blockCoord[1]->setCoord(0, 1);
+blockCoord[1]->setCoord(3, 1);
 
 blockCoord[2]=new Coordinate;
-blockCoord[2]->setCoord(1, 1);
+blockCoord[2]->setCoord(4, 1);
 
 blockCoord[3]=new Coordinate;
-blockCoord[3]->setCoord(1, 2);
+blockCoord[3]->setCoord(4, 2);
+
+for(int i=0;i<4;i++){
+Coordinate *c=blockCoord[i];
+int x=c->getX(c);
+int y=c->getY(c);
+cout<<"("<<x<<", "<<y<<")"<<endl;
+board[x][y]="Z";
+}
 }
 
-void zblock::printBlock(){
-for(int i=0;i<4;i++){
-blockCoord[i]->getCoord(blockCoord[i]);
-}
-}
+
+

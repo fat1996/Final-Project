@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 
-const int boardheight=15;
+const int boardheight=18;
 const int boardwidth=11;
 
 class grid {

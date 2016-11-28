@@ -5,11 +5,10 @@
 
 class lblock: public block{
 public:
-	void initialize() override;
-	void printBlock() override;
-	void fillBlock(std::string** board) override;
-	void drop(std::map<std::string, int> returnRows, std::string** board) override;
-	std::map<std::string, int> updateRows(std::map<std::string, int> returnRows, std::string** board)=0;
+	void initialize(std::string** board) override;
+	void clockwise(std::string** board) override;
+	void anticlockwise(std::string** board) override;
+	void updateBoard(std::string** board) override;
 };
 
 #endif

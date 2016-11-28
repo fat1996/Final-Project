@@ -5,297 +5,160 @@
 #include "coordinate.h"
 #include "jblock.h"
 
-const int bottomRow=14;
-const int leftBorder=0;
-const int rightBorder=11;
+//const int bottomRow=14;
+//const int leftBorder=0;
+//const int rightBorder=11;
 using namespace std;
 
 //helper fn for drop and down.
 //when you calculate a new set of coordinates, you have to see if those new coordinates are already the old coordinates of the block(in cases of overlap).
 //this function returns true if the new coordinates have an overlap with the old coordinates of the block.
-bool jblock::isPresent(int x, int y){
-bool present=false;
-for(int i=0;i<4;i++){
-Coordinate *c=blockCoord[i];
-	int x1=c->getX(c);
-	int y1=c->getY(c);
-	if(x==x1 && y==y1){
-	cout<<x<<", "<<y<<" is already present"<<endl;
-	present=true;
-	break;
-}
-}
-return present;
-}
 
-jblock::~jblock(){
-for(int i=0;i<4;i++){
-delete blockCoord[i];
-}
-}
+void jblock::clockwise(string** board){
+cout<<"Current state of block: "<<state<<endl;
 
-void jblock::left(string** board){
-//you need to determine the left-most x-coordinate.
-
-int minX;
-int index=0;  //index at which the smallest x is.
-//determining the leftmost x-coord(the smallest value of x).
-for(int i=0;i<4;i++){
-Coordinate *c=blockCoord[i];
-int x=c->getY(c);  
-
-if(i==0) minX=x;
-else{
-if(x<minX){
- minX=x;
-index=i;
-}
-} }
-cout<<"minX: "<<minX<<", index: "<<index<<endl;
-
-if(minX==leftBorder){} //move cannot be made. 
-else{  
-Coordinate *c=blockCoord[index];  
+if(state==1){
+cout<<"Current coordinates: "<<endl;
+Coordinate *c=blockCoord[0];
 int x=c->getX(c);
 int y=c->getY(c);
-y=y-1;
-if(board[x][y]==" "){   //perfect fit.
-for(int i=0;i<4;i++){
-Coordinate *c=blockCoord[i];
-int x=c->getX(c);
-int y=c->getY(c);
-board[x][y]=" ";
-y=y-1;
-blockCoord[i]=new Coordinate;
-blockCoord[i]->setCoord(x, y);
+for(int i=1;i<4;i++){
+Coordinate *d=blockCoord[i];
+int x1=d->getX(d);
+int y1=d->getY(d);
+if(x1>x){
+x=x1;
+}
+if(y1<y){
+y=y1;
 }
 }
-}
-}
+cout<<"Carried over: "<<x<<", "<<y<<endl;
+carriedOver->setCoord(x, y);
 
-void jblock::right(string** board){
-//you need to determine the left-most x-coordinate.
-
-int maxX;
-int index=0;
-//determining the rightmost x-coord(the largest value of x).
-for(int i=0;i<4;i++){
-Coordinate *c=blockCoord[i];
-int y=c->getY(c);
-
-if(i==0) maxX=y;
-else{
-if(y>maxX) {
-maxX=y;
-index=i;
-} } }
-cout<<"maxX: "<<maxX<<", index: "<<index<<endl;
-
-if(maxX==rightBorder){} //move cannot be made.
-else{  //move can be made, but you need to check if the cell next to the rightmost edge of the block is empty or not.
-Coordinate *c=blockCoord[index];  //replace with a const.
-int x=c->getX(c);
-int y=c->getY(c);
-y=y+1;
-
-if(board[x][y]==" "){
-cout<<"We have a perfect fit!"<<endl;
-//new coordinates created.
-for(int i=0;i<4;i++){
-Coordinate *c=blockCoord[i];
-int x=c->getX(c);
-int y=c->getY(c);
-board[x][y]=" ";
-y=y+1;
-blockCoord[i]=new Coordinate;
-blockCoord[i]->setCoord(x, y);
-}}}}
-
-void jblock::down(string** board){
-//you need to determine the bottom-most x-coordinate.
-
-int maxX;
-//int index=0;
-//determining the bottommost x-coord(the largest value of x).
-for(int i=0;i<4;i++){
-Coordinate *c=blockCoord[i];
-int y=c->getY(c);
-
-if(i==0) maxX=y;
-else{
-if(y>maxX) {
-maxX=y;
-//index=i;
-} } }
-cout<<"maxX: "<<maxX<<endl;
-
-if(maxX==bottomRow){} //move cannot be made.
-else{  //move can be made, but you need to check if the 4 cells of the block can shift down completely.
-	//this will invoke isPresent as well.
-
-//int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-//cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
-
-int count=0;  
-cout<<"New coordinates: "<<endl;
-//determine the new coordinates.
-for(int j=0;j<4;j++){
-Coordinate *c=blockCoord[j];
-int x=c->getX(c);
-int newX=x+1;
-int y=c->getY(c);  //y-coord stays the same.
-cout<<j<<": "<<newX<<", "<<y<<endl;
-
-bool Present=isPresent(newX, y);  //helper fn called.
-//now, we have a new set of coordinates. check if these coordinates are empty. if yes, drop. if not, do the same process for a diff index(i).
-if(board[newX][y]==" " || Present==true) ++count;
-cout<<"Count: "<<count<<endl;
-}
-
-cout<<"count: "<<count<<endl;
-if(count==4){   //If count==4(perfect fit), then you have to set the new co-ordinates.
+//you know what the new set of coordinates are going to be.
+//1st, check if those blocks are empty.
+if((board[x][y]==" " || isPresent(x, y)==true) && 
+	(board[x+1][y]==" " || isPresent(x+1, y)==true) && 
+	(board[x-1][y]==" " || isPresent(x-1, y)==true) && 
+	(board[x-1][y+1]==" " || isPresent(x-1, y+1)==true)){
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
 int y=c->getY(c);
-int newX=x+1;
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
-blockCoord[j]=new Coordinate;
-blockCoord[j]->setCoord(newX, y);
-}}}}
-
-
-map<string, int> jblock::updateRows(map<string, int> returnRows, string** board) {
-for(int i=0;i<15;i++){
-int count=0;
-for(int j=0;j<11;j++){
-if(board[i][j]==" ")
-{
-++count;
-}		
 }
-cout<<"Row: "<<i<<", count: "<<count<<endl;
-if(count==0){  //all the cells are completely filled.
-returnRows[to_string(i)]=2;  //not empty.
-}
-else if(count==11){
-returnRows[to_string(i)]=0;
-}
-else{
-returnRows[to_string(i)]=1;
+blockCoord[0]->setCoord(x, y);
+blockCoord[1]->setCoord(x+1, y);
+blockCoord[2]->setCoord(x-1, y);
+blockCoord[3]->setCoord(x-1, y+1);
+state=2;
 }
 }
-return returnRows;
-}
 
+else if(state==2){
+int x=carriedOver->getX(carriedOver);
+int y=carriedOver->getY(carriedOver);
 
+cout<<"State: "<<state<<", carriedOver: "<<x<<", "<<y<<endl;
 
-
-
-
-//the bottom-most row is the one with the highest index.
-void jblock::drop(map<string, int> returnRows, string** board) {
-returnRows=updateRows(returnRows, board);
-
-//Iterate through the map of rows, to check if the bottommost row is empty or not.
-for(int i=bottomRow;i>=0;i--) 
-{
-string index=to_string(i);
-cout<<"Index: "<<index<<endl;
-
-if(returnRows[index]==1)  //not completely filled.
-{
-cout<<"Row "<<i<<" is not completely filled."<<endl;
-int maxRow=0;
-
-//this determines the lowest row of the block.
-for(int i=0;i<4;i++)
-{
-Coordinate *c=blockCoord[i];
-int x=c->getX(c);
-if(x>maxRow){
-maxRow=x;
-} }
-
-int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
-
-int count=0;  
-cout<<"New coordinates: "<<endl;
-//determine the new coordinates.
-for(int j=0;j<4;j++){
-Coordinate *c=blockCoord[j];
-int x=c->getX(c);
-int newX=x+delta;
-int y=c->getY(c);  //y-coord stays the same.
-cout<<j<<": "<<newX<<", "<<y<<endl;
-
-bool Present=isPresent(newX, y);  //helper fn called.
-//now, we have a new set of coordinates. check if these coordinates are empty. if yes, drop. if not, do the same process for a diff index(i).
-if(board[newX][y]==" " || Present==true) ++count;
-cout<<"Count: "<<count<<endl;
-}
-
-cout<<"count: "<<count<<endl;
-if(count==4){
-//If count==3(perfect fit), then you have to set the new co-ordinates.
+//you know what the new set of coordinates are going to be.
+//1st, check if those blocks are empty.
+if((board[x][y]==" " || isPresent(x, y)==true) && 
+	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
+	(board[x][y+2]==" " || isPresent(x, y+2)==true) && 
+	(board[x+1][y+2]==" " || isPresent(x+1, y+2)==true)){
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
 int y=c->getY(c);
-int newX=x+delta;
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
-blockCoord[j]=new Coordinate;
-blockCoord[j]->setCoord(newX, y);
 }
-break;
-}
-
-}
-
-else if(returnRows[to_string(i)]==2)  //completely filled.
-{
-cout<<"Row "<<i<<" is completely filled."<<endl;
-}
-
-
-/*******************************************************************************************/
-else {  //completely empty(0).
-cout<<"Row "<<i<<" is completely empty."<<endl;
-int maxRow=0;
-
-//this determines the lowest row of the block.
-for(int i=0;i<4;i++)
-{
-Coordinate *c=blockCoord[i];
-int x=c->getX(c);
-if(x>maxRow){
-maxRow=x;
+blockCoord[0]->setCoord(x, y);
+blockCoord[1]->setCoord(x, y+1);
+blockCoord[2]->setCoord(x, y+2);
+blockCoord[3]->setCoord(x+1, y+2);
+state=3;
 }
 }
-int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-cout<<"Delta: "<<delta<<endl;
 
-cout<<"Previous coord: "<<endl;
-//set the new coordinates.
+else if(state==3){
+int x=carriedOver->getX(carriedOver);
+int y=carriedOver->getY(carriedOver)+1;
+carriedOver->setCoord(x, y);
+cout<<"State: "<<state<<", carriedOver: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
+
+//you know what the new set of coordinates are going to be.
+//1st, check if those blocks are empty.
+if((board[x][y]==" " || isPresent(x, y)==true) && 
+	(board[x-1][y]==" " || isPresent(x-1, y)==true) && 
+	(board[x+1][y]==" " || isPresent(x+1, y)==true) && 
+	(board[x+1][y-1]==" " || isPresent(x+1, y-1)==true)){
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
-int newX=x+delta;
-int y=c->getY(c);  //y-coord stays the same.
-cout<<j<<": "<<x<<", "<<y<<endl;
+int y=c->getY(c);
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
-blockCoord[j]=new Coordinate;
-blockCoord[j]->setCoord(newX, y);
 }
-break;
-}
-/*******************************************************************************************/
+blockCoord[0]->setCoord(x, y);
+blockCoord[1]->setCoord(x-1, y);
+blockCoord[2]->setCoord(x+1, y);
+blockCoord[3]->setCoord(x+1, y-1);
+state=4;
 }
 }
 
+else if(state==4){
+int x=carriedOver->getX(carriedOver);
+int y=carriedOver->getY(carriedOver)-1;
+carriedOver->setCoord(x, y);
+cout<<"State: "<<state<<", carriedOver: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 
-void jblock::fillBlock(string** board){
+//you know what the new set of coordinates are going to be.
+//1st, check if those blocks are empty.
+if((board[x][y]==" " || isPresent(x, y)==true) && 
+	(board[x-1][y]==" " || isPresent(x-1, y)==true) && 
+	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
+	(board[x][y+2]==" " || isPresent(x, y+2)==true)){
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+board[x][y]=" ";  //the previous coordinates of the block are set to empty.
+}
+blockCoord[0]->setCoord(x, y);
+blockCoord[1]->setCoord(x-1, y);
+blockCoord[2]->setCoord(x, y+1);
+blockCoord[3]->setCoord(x, y+2);
+state=1;
+}
+}
+}
+
+void jblock::anticlockwise(string** board){
+if(state==1){  //call cw 3 times.
+for(int i=0;i<3;i++){
+	this->clockwise(board);
+}
+}
+else if(state==2){  
+for(int i=0;i<3;i++){
+	this->clockwise(board);
+}
+}
+else if(state==3){  
+for(int i=0;i<3;i++){
+	this->clockwise(board);
+}
+}
+else if(state==4){
+for(int i=0;i<3;i++){
+	this->clockwise(board);
+}
+}
+}
+
+void jblock::updateBoard(string** board){
 for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
@@ -305,23 +168,27 @@ board[x][y]="J";
 }
 }
 
-void jblock::initialize(){
+void jblock::initialize(string** board){
+state=1;
+carriedOver=new Coordinate;
 
 blockCoord[0]=new Coordinate;
-blockCoord[0]->setCoord(0, 0);
+blockCoord[0]->setCoord(3, 0);
 
 blockCoord[1]=new Coordinate;
-blockCoord[1]->setCoord(1, 0);
+blockCoord[1]->setCoord(4, 0);
 
 blockCoord[2]=new Coordinate;
-blockCoord[2]->setCoord(1, 1);
+blockCoord[2]->setCoord(4, 1);
 
 blockCoord[3]=new Coordinate;
-blockCoord[3]->setCoord(1, 2);
-}
+blockCoord[3]->setCoord(4, 2);
 
-void jblock::printBlock(){
 for(int i=0;i<4;i++){
-blockCoord[i]->getCoord(blockCoord[i]);
+Coordinate *c=blockCoord[i];
+int x=c->getX(c);
+int y=c->getY(c);
+cout<<"("<<x<<", "<<y<<")"<<endl;
+board[x][y]="J";
 }
 }
