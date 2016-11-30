@@ -4,10 +4,10 @@
 
 using namespace std;
 
-block::~block(){
-for(int i=0;i<4;i++){
-delete blockCoord[i];
-}
+block::~block() { 
+	for(int i=0 ; i<4; i++) {
+		delete blockCoord[i];
+	}
 }
 
 void block::printBlock(){
