@@ -1,5 +1,7 @@
+#include <fstream>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include "block.h"
 #include "grid.h"
 
@@ -9,7 +11,7 @@ string scriptfile = "sequence.txt";
 bool textOnly = false;
 int level = 0;
 int repeat = 1;
-// int seed = ???
+unsigned int seed = RAND_MAX;
 
 // map to keep track of name of command
 map<string, string> commandMap;
@@ -28,10 +30,10 @@ void createCommandMap() {
 }
 
 
-// Interprets command line input
-void executeCommandLine(int argc, char *argv[]) {
+// Interprets command line input and returns 1 if unsuccessful, 0 is successful
+int executeCommandLine(int argc, char *argv[]) {
 	if (argc == 1) {
-		return;
+		return 0;
 	}
 	for (int i = 1; i < argc; i++) {
 		string option = argv[i];
@@ -40,16 +42,35 @@ void executeCommandLine(int argc, char *argv[]) {
 			textOnly = true;
 		} else if (option == "-scriptfile") {
 			++i;
-			scriptfile = argv[i];
+			string tmpScriptfile = argv[i];
+			ifstream filestream{tmpScriptfile};
+			if (!filestream.good()) {
+				cout << "File does not exist!" << endl;
+				return 1;
+			}
+			++i;
+			scriptfile = tmpScriptfile;
 		} else if (option == "-seed") {
 			++i;
-			// seed = atoi(argv[i]);
-		} else {
-			// -startlevel
+			int tmpSeed = atoi(argv[i]);
+			if (tmpSeed < 0) {
+				cout << "Invalid seed value." << endl;
+				return 1;;
+			}
 			++i;
-			level = atoi(argv[i]);
+			seed = tmpSeed;
+		} else {
+			++i;
+			int tmpLevel = atoi(argv[i]);
+			if (tmpLevel < 0 || tmpLevel > 4) {
+				cout << "Invalid starting level." << endl;
+				return 1;
+			}
+			++i;
+			level = tmpLevel;
 		}
 	}
+	return 0;
 }
 
 // Updates repeat to accurate number
@@ -86,13 +107,14 @@ string determineCommand(string command) {
 	}
 }
 
-// HANDLE BLOCK DESTRUCTOR TO DELETE NEXT BLOCK
+// TODO HANDLE BLOCK DESTRUCTOR TO DELETE NEXT BLOCK AND CHECK SEG FAULTS
 int main(int argc, char *argv[]) {
 	createCommandMap();
-	executeCommandLine(argc, argv);
-
+	int result = executeCommandLine(argc, argv);
+	if (result != 0) {
+		return 1;
+	}
 	// seed tingz
-
 	grid *g = new grid;
 	g->SetBoard(0, scriptfile);
 	g->DrawBoard();
