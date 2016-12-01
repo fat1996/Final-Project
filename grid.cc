@@ -31,7 +31,7 @@ string** grid::returnBoard(){
 	return board;
 }
 
-void grid::SetBoard(int level_num) {   //this sets up the initial configuration of the board.
+void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the initial configuration of the board.
 	board = new string*[boardheight];
 	for(int i=0; i<boardheight ; i++) {
 		board[i] = new string[boardwidth];
@@ -41,7 +41,7 @@ void grid::SetBoard(int level_num) {   //this sets up the initial configuration 
 	string rowIndex = to_string(i);
 	emptyRows[rowIndex]=0; //0 means empty. The entire row is empty.	
 	}
-	level = new Level0();
+	level = new Level0(scriptfile);
 	currentBlock = level->getNextBlock();
 	currentBlock->initialize(this->board);
 	activeBlocks.push_back(currentBlock);

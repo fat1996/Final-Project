@@ -18,8 +18,8 @@ using namespace std;
 int Level0::curPos = 0;
 
 // Constructor reads blocks from file and stores in sequence vector
-Level0::Level0() : Level(0) {
-	ifstream readfile {"sequence.txt"};
+Level0::Level0(string scriptfile) : Level(0) {
+	ifstream readfile {scriptfile};
 	string block;
 	while (readfile >> block) {
 		sequence.push_back(block);
