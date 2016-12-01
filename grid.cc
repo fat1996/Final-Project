@@ -5,6 +5,9 @@
 #include "block.h"
 #include "level.h"
 #include "level0.h"
+#include "level1.h"
+#include "level2.h"
+#include "level3.h"
 
 using namespace std;
 
@@ -41,7 +44,15 @@ void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the ini
 	string rowIndex = to_string(i);
 	emptyRows[rowIndex]=0; //0 means empty. The entire row is empty.	
 	}
-	level = new Level0(scriptfile);
+	if (level_num == 0) {
+		level = new Level0(scriptfile);
+	} else if (level_num == 1) {
+		level = new Level1();
+	} else if (level_num == 2) {
+		level = new Level2();
+	} else {
+		level = new Level3();
+	}
 	currentBlock = level->getNextBlock();
 	currentBlock->initialize(this->board);
 	activeBlocks.push_back(currentBlock);

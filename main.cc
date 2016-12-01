@@ -11,7 +11,7 @@ string scriptfile = "sequence.txt";
 bool textOnly = false;
 int level = 0;
 int repeat = 1;
-unsigned int seed = RAND_MAX;
+unsigned int seed = time(NULL);
 
 // map to keep track of name of command
 map<string, string> commandMap;
@@ -59,7 +59,7 @@ int executeCommandLine(int argc, char *argv[]) {
 			}
 			++i;
 			seed = tmpSeed;
-		} else {
+		} else if (option == "-startlevel") {
 			++i;
 			int tmpLevel = atoi(argv[i]);
 			if (tmpLevel < 0 || tmpLevel > 4) {
@@ -68,6 +68,9 @@ int executeCommandLine(int argc, char *argv[]) {
 			}
 			++i;
 			level = tmpLevel;
+		} else {
+			cout << "Invalid command line arguments" << endl;
+			return 1;
 		}
 	}
 	return 0;
@@ -114,9 +117,10 @@ int main(int argc, char *argv[]) {
 	if (result != 0) {
 		return 1;
 	}
-	// seed tingz
+
+	srand(seed); // Random seed is set
 	grid *g = new grid;
-	g->SetBoard(0, scriptfile);
+	g->SetBoard(level, scriptfile);
 	g->DrawBoard();
 
 	string command;
