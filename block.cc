@@ -279,7 +279,7 @@ cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<ca
 }
 
 //call heavy function after every move.
-this->Heavy(board);
+//this->Heavy(board);
 }
 
 void block::right(string** board){
@@ -334,7 +334,7 @@ carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 }
 //call heavy function after every move.
-this->Heavy(board);
+//this->Heavy(board);
 }
 
 void block::down(string** board){
@@ -395,7 +395,7 @@ carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 }}
 //call heavy function after every move.
-this->Heavy(board);
+//this->Heavy(board);
 }
 
 

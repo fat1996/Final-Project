@@ -217,6 +217,9 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			// TODO: Case draws board even if the command is invalid.
+			//FATIMA: ADD HEAVY FN HERE.
+			g->getCurrentBlock()->Heavy(g->returnBoard());
+			g->getCurrentBlock()->updateBoard(g->returnBoard());
 			g->DrawBoard();
 			// reset repeat
 			repeat = 1;
