@@ -161,6 +161,7 @@ int main(int argc, char *argv[]) {
 				} else if (command == "drop") {
 			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard());
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
+			 		g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()));
 			 		g->getNextBlock();
 				}
 				/* else if (command == "levelup") {

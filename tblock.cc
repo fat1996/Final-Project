@@ -120,6 +120,8 @@ blockCoord[3]->setCoord(x+1, y+1);
 state=1;
 }
 }
+//call heavy function after every move.
+this->Heavy(board);
 }
 
 void tblock::anticlockwise(string** board){
@@ -143,6 +145,8 @@ for(int i=0;i<3;i++){
 	this->clockwise(board);
 }
 }
+//call heavy function after every move.
+this->Heavy(board);
 }
 
 void tblock::updateBoard(string** board){
@@ -155,10 +159,21 @@ board[x][y]="T";
 }
 }
 
-void tblock::initialize(string** board){
+void tblock::initialize(string** board, int level_num){
 
 state=1;
+level=level_num;
+//set isHeavy.
+if(level_num==0 || level_num==1 || level_num==2){
+	isHeavy=false;
+}
+else {
+	isHeavy=true;
+}
+
 carriedOver=new Coordinate;
+carriedOver->setCoord(0, 0);
+
 blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 

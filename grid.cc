@@ -26,7 +26,7 @@ grid::~grid(){
 	activeBlocks.clear();
 }
 
-map<string, int> grid::returnRows(){
+map<int, int> grid::returnRows(){
 	return emptyRows;
 }
 
@@ -41,7 +41,7 @@ void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the ini
 		for(int j = 0; j<boardwidth ; j++) {
 			board[i][j]=" ";
 		}
-	string rowIndex = to_string(i);
+	int rowIndex = i;
 	emptyRows[rowIndex]=0; //0 means empty. The entire row is empty.	
 	}
 	if (level_num == 0) {
@@ -54,7 +54,7 @@ void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the ini
 		level = new Level3();
 	}
 	currentBlock = level->getNextBlock();
-	currentBlock->initialize(this->board);
+	currentBlock->initialize(this->board, level_num);
 	activeBlocks.push_back(currentBlock);
 	nextBlock = level->getNextBlock();
 }
@@ -76,7 +76,7 @@ block* grid::getCurrentBlock() {
 
 block* grid::getNextBlock() {
 	this->currentBlock = this->nextBlock;
-	currentBlock->initialize(this->board);
+	currentBlock->initialize(this->board, level->getLevel());
 	activeBlocks.push_back(currentBlock);
 	this->nextBlock = this->level->getNextBlock();
 	return this->nextBlock;

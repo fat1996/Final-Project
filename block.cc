@@ -10,31 +10,93 @@ block::~block() {
 	}
 }
 
+void block::updateScore(string **board, map<int, int> emptyRows){
+cout<<"Drop has been executed. Check if any rows are completely filled and update grid."<<endl;
+
+for(int i=bottomRow;i>=1;i--){
+	cout<<"Row number: "<<i<<", val: "<<emptyRows[i]<<endl;
+if(emptyRows[i]==2){  //row is completely full.
+cout<<"Row: "<<i<<" is full."<<endl;
+
+for(int i1=i;i1>=1;i1--){
+	for(int j1=0;j1<rightBorder;j1++){
+		int upperRow=i1-1;
+		board[i1][j1]=board[upperRow][j1];
+	}
+}
+break;
+}
+}
+
+cout<<"the grid has been updated. This is what it looks like: "<<endl;
+for(int i=0;i<=bottomRow;i++){
+	for(int j=0;j<rightBorder;j++){
+		cout<<board[i][j];
+	}
+	cout<<endl;
+}
+
+emptyRows=updateRows(emptyRows, board);
+
+
+cout<<"emptyRows has been updated. This is what it looks like: "<<endl;
+for(int i=0;i<=bottomRow;i++){
+	cout<<"Index: "<<i<<", val: "<<emptyRows[i]<<endl;
+}
+
+for(int i=0;i<=bottomRow;i++){
+	if(emptyRows[i]==2){
+		updateScore(board, updateRows(emptyRows, board));
+		break;
+	}
+}
+
+cout<<"Everything has been UPDATED. FINAL LOOK OF THE GRID: "<<endl;
+for(int i=0;i<=bottomRow;i++){
+	for(int j=0;j<rightBorder;j++){
+		cout<<board[i][j];
+	}
+	cout<<endl;
+}
+}
+
+void block::Heavy(string **board){
+cout<<"This block was generated on level: "<<level<<endl;
+if(level>=3){
+this->down(board);
+}
+}
+
 void block::printBlock(){
 for(int i=0;i<4;i++){
 blockCoord[i]->getCoord(blockCoord[i]);
 }
 }
 
-map<string, int> block::updateRows(map<string, int> returnRows, string** board) {
+
+map<int, int> block::updateRows(map<int, int> returnRows, string** board) {
+cout<<"Function updateRows running"<<endl;
+//cout<<"This is what the grid looks like rn: "<<endl;
 for(int i=0;i<=bottomRow;i++){
 int count=0;
 for(int j=0;j<rightBorder;j++){
+//cout<<board[i][j];
 if(board[i][j]==" ")
 {
 ++count;
 }		
 }
-cout<<"Row: "<<i<<", count: "<<count<<endl;
+//cout<<endl;
 if(count==0){  //all the cells are completely filled.
-returnRows[to_string(i)]=2;  //not empty.
+returnRows[i]=2;  //not empty.
 }
 else if(count==rowCap){
-returnRows[to_string(i)]=0;
+returnRows[i]=0;
 }
 else{
-returnRows[to_string(i)]=1;
+returnRows[i]=1;
 }
+cout<<"Row: "<<i<<", count: "<<returnRows[i]<<endl;
 }
 return returnRows;
 }
@@ -55,13 +117,21 @@ return present;
 }
 
 //the bottom-most row is the one with the highest index.
-void block::drop(map<string, int> returnRows, string** board) {
+void block::drop(map<int, int> returnRows, string** board) {
 returnRows=updateRows(returnRows, board);
+
+cout<<"BOARD: "<<endl;
+for(int i=0;i<=bottomRow;i++){
+	for(int j=0;j<rightBorder;j++){
+		cout<<board[i][j];
+	}
+	cout<<endl;
+}
 
 //Iterate through the map of rows, to check if the bottommost row is empty or not.
 for(int i=bottomRow;i>=0;i--) 
 {
-string index=to_string(i);
+int index=i;
 cout<<"Index: "<<index<<endl;
 
 if(returnRows[index]==1)  //not completely filled.
@@ -114,7 +184,7 @@ break;
 
 }
 
-else if(returnRows[to_string(i)]==2)  //completely filled.
+else if(returnRows[i]==2)  //completely filled.
 {
 cout<<"Row "<<i<<" is completely filled."<<endl;
 }
@@ -153,6 +223,8 @@ break;
 }
 /*******************************************************************************************/
 }
+//updateRows(returnRows, board);
+// emptyRows needs to be updated once the block has been dropped.
 }
 
 void block::left(string** board){
@@ -204,7 +276,11 @@ int y=carriedOver->getY(carriedOver);
 y=y-1;
 carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
-}}
+}
+
+//call heavy function after every move.
+this->Heavy(board);
+}
 
 void block::right(string** board){
 //you need to determine the left-most x-coordinate.
@@ -217,7 +293,7 @@ Coordinate *c=blockCoord[i];
 int y=c->getY(c);
 
 if(i==0) maxX=y;
-else{
+else {
 if(y>maxX) {
 maxX=y;
 index=i;
@@ -225,17 +301,20 @@ index=i;
 cout<<"maxX: "<<maxX<<", index: "<<index<<endl;
 
 if(maxX==rightBorder){} //move cannot be made.
-else{  //move can be made, but you need to check if the cell next to the rightmost edge of the block is empty or not.
+else {  //move can be made, but you need to check if the cell next to the rightmost edge of the block is empty or not.
 int count=0;
 for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
 y=y+1;
+if(y==rightBorder){
+	//move cant be made. index out of array. will give segmentation fault.
+}
+else {
 if(board[x][y]==" " || isPresent(x, y)==true){
 	++count;
-}
-}
+}}}
 
 if(count==4){  //perfect fit.
 //new coordinates created.
@@ -253,7 +332,10 @@ int y=carriedOver->getY(carriedOver);
 y=y+1;
 carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
-}}
+}
+//call heavy function after every move.
+this->Heavy(board);
+}
 
 void block::down(string** board){
 //you need to determine the bottom-most x-coordinate.
@@ -311,7 +393,10 @@ int y=carriedOver->getY(carriedOver);
 x=x+1;
 carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
-}}}
+}}
+//call heavy function after every move.
+this->Heavy(board);
+}
 
 
 

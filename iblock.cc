@@ -69,6 +69,8 @@ blockCoord[3]->setCoord(x, y+3);
 state=1;
 }
 }
+//call heavy function after every move.
+this->Heavy(board);
 }
 
 void iblock::anticlockwise(string** board){
@@ -78,6 +80,8 @@ if(state==1){  //call cw 3 times.
 else if(state==2){  
 	this->clockwise(board);
 }
+//call heavy function after every move.
+this->Heavy(board);
 }
 
 void iblock::updateBoard(string** board){
@@ -90,10 +94,21 @@ board[x][y]="I";
 }
 }
 
-void iblock::initialize(string** board){
+void iblock::initialize(string** board, int level_num){
 
-state=1;
+state=1;  //don't change. default state.
+level=level_num;
+//set isHeavy.
+if(level_num==0 || level_num==1 || level_num==2){
+	isHeavy=false;
+}
+else {
+	isHeavy=true;
+}
+
 carriedOver=new Coordinate;
+carriedOver->setCoord(0, 0);
+
 blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 
