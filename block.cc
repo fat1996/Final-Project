@@ -278,10 +278,11 @@ carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 }
 
+//call heavy function after every move.
+//this->Heavy(board);
 }
 
 void block::right(string** board){
-
 //you need to determine the left-most x-coordinate.
 
 int maxX;

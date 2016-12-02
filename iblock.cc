@@ -27,9 +27,9 @@ carriedOver->setCoord(x, y);   //lowest x, lowest y.
 //you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
-	(board[x-1][y]==" " || isPresent(x-1, y)==true) && 
-	(board[x-2][y]==" " || isPresent(x-2, y)==true) && 
-	(board[x-3][y]==" " || isPresent(x-3, y)==true)){
+	(board[x+1][y]==" " || isPresent(x+1, y)==true) && 
+	(board[x+2][y]==" " || isPresent(x+2, y)==true) && 
+	(board[x+3][y]==" " || isPresent(x+3, y)==true)){
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
@@ -37,9 +37,9 @@ int y=c->getY(c);
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 }
 blockCoord[0]->setCoord(x, y);
-blockCoord[1]->setCoord(x-1, y);
-blockCoord[2]->setCoord(x-2, y);
-blockCoord[3]->setCoord(x-3, y);
+blockCoord[1]->setCoord(x+1, y);
+blockCoord[2]->setCoord(x+2, y);
+blockCoord[3]->setCoord(x+3, y);
 state=2;
 }
 }
