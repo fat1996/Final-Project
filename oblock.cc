@@ -4,6 +4,9 @@
 
 using namespace std;
 
+// Constructor that sets type
+oblock::oblock() : block{'O'} {}
+
 void oblock::updateBoard(string** board){
 for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];

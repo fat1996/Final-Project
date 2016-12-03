@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// Constructor that sets type
+tblock::tblock() : block{'T'} {}
 
 void tblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;

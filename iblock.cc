@@ -1,8 +1,12 @@
 #include <iostream>
 #include <map>
 #include "iblock.h"
+#include "block.h"
 
 using namespace std;
+
+// Constructor that sets type
+iblock::iblock() : block('I') {}
 
 void iblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
@@ -96,7 +100,7 @@ void iblock::initialize(string** board, int level_num){
 state=1;  //don't change. default state.
 level=level_num;
 //set isHeavy.
-if(level_num<=2){
+if(level_num==0 || level_num==1 || level_num==2){
 	isHeavy=false;
 }
 else {
@@ -126,4 +130,3 @@ cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="I";
 }
 }
-

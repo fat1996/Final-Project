@@ -7,6 +7,9 @@
 
 using namespace std;
 
+// Constructor that sets type
+jblock::jblock() : block{'J'} {}
+
 void jblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
 
@@ -176,7 +179,7 @@ else {
 }
 
 carriedOver=new Coordinate;
-carriedOver->setCoord(0, 0);
+carriedOver->setCoord(3, 0);
 
 blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);

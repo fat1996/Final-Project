@@ -4,6 +4,9 @@
 
 using namespace std;
 
+// Constructor that sets type
+sblock::sblock() : block{'S'} {}
+
 void sblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
 

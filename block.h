@@ -5,6 +5,7 @@
 
 const int bottomRow=17;
 const int leftBorder=0;
+const int topBorder=0;
 const int rightBorder=11;
 const int rowCap=11;
 

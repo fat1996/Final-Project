@@ -42,21 +42,7 @@ break;
 }
 }
 
-cout<<"the grid has been updated. This is what it looks like: "<<endl;
-for(int i=0;i<=bottomRow;i++){
-	for(int j=0;j<rightBorder;j++){
-		cout<<board[i][j];
-	}
-	cout<<endl;
-}
-
 emptyRows=updateRows(emptyRows, board);
-
-
-cout<<"emptyRows has been updated. This is what it looks like: "<<endl;
-for(int i=0;i<=bottomRow;i++){
-	cout<<"Index: "<<i<<", val: "<<emptyRows[i]<<endl;
-}
 
 for(int i=0;i<=bottomRow;i++){
 	if(emptyRows[i]==2){
@@ -134,14 +120,6 @@ return present;
 void block::drop(map<int, int> returnRows, string** board) {
 returnRows=updateRows(returnRows, board);
 
-cout<<"BOARD: "<<endl;
-for(int i=0;i<=bottomRow;i++){
-	for(int j=0;j<rightBorder;j++){
-		cout<<board[i][j];
-	}
-	cout<<endl;
-}
-
 //Iterate through the map of rows, to check if the bottommost row is empty or not.
 for(int i=bottomRow;i>=0;i--) 
 {
@@ -195,7 +173,6 @@ blockCoord[j]->setCoord(newX, y);
 }
 break;
 }
-
 }
 
 else if(returnRows[i]==2)  //completely filled.
@@ -237,8 +214,6 @@ break;
 }
 /*******************************************************************************************/
 }
-//updateRows(returnRows, board);
-// emptyRows needs to be updated once the block has been dropped.
 }
 
 void block::left(string** board){
@@ -283,7 +258,6 @@ board[x][y]=" ";
 y=y-1;
 blockCoord[i]->setCoord(x, y);
 }
-}
 //update carriedOver.
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
@@ -291,9 +265,7 @@ y=y-1;
 carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 }
-
-//call heavy function after every move.
-//this->Heavy(board);
+}
 }
 
 void block::right(string** board){
@@ -340,15 +312,13 @@ board[x][y]=" ";
 y=y+1;
 blockCoord[i]->setCoord(x, y);
 }
-}
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
 y=y+1;
 carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 }
-//call heavy function after every move.
-//this->Heavy(board);
+}
 }
 
 void block::down(string** board){
@@ -369,10 +339,6 @@ cout<<"maxX: "<<maxX<<endl;
 
 if(maxX==bottomRow){} //move cannot be made.
 else{  //move can be made, but you need to check if the 4 cells of the block can shift down completely.
-	//this will invoke isPresent as well.
-
-//int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-//cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
 
 int count=0;  
 cout<<"New coordinates: "<<endl;
@@ -408,8 +374,6 @@ x=x+1;
 carriedOver->setCoord(x, y);
 cout<<"carriedOver has been updated: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
 }}
-//call heavy function after every move.
-//this->Heavy(board);
 }
 
 

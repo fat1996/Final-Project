@@ -4,6 +4,9 @@
 
 using namespace std;
 
+// Constructor that sets type
+zblock::zblock() : block{'Z'} {}
+
 void zblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
 
