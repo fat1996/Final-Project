@@ -25,8 +25,8 @@ void createCommandMap() {
 	commandMap["counterclockwise"] = "counterclockwise";
 	commandMap["drop"] = "drop";
 	commandMap["levelup"] = "levelup";
+	commandMap["leveldown"] = "leveldown";
 	commandMap["restart"] = "restart";
-	commandMap["hint"] = "hint";
 }
 
 
@@ -163,37 +163,24 @@ int main(int argc, char *argv[]) {
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
 			 		g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()));
 			 		g->getNextBlock();
-				}
-				/* else if (command == "levelup") {
+				} else if (command == "levelup") {
 					if (level == 4) {
 						cout << "You are at the highest level" << endl;
 					}
 					else {
-						// delete old level object, and get new level object
+						g->levelUp();
+						level++;
 					}
 				} else if (command == "leveldown") {
 					if (level == 0) {
 						cout << "You are at the lowest level" << endl;
 					}
 					else {
-						// delete old level object, and get new level object
+						g->levelDown(scriptfile);
+						level--;
 					}
-				} else if (command == "norandom") {
-					string filename;
-					cin >> filename;
-					scriptfile = filename;
-				} else if (command "random") {
-					if (level >= 3) {
-						scriptfile = ""
-					}
-					else {
-						cout << "Only relevent in level 3 and 4" << endl;
-					}
-				} else if (command == "sequence") {
-					string commandSeqFile;
-					cin >> commandSeqFile;
-					// open file, save commands, and run them
-				} else if (command == "I") {
+				} 
+				/*  else if (command == "I") {
 					// Destroy current block, and replace with I block, includes rotationState
 				} else if (command == "J") {
 					// Destroy current block, and replace with J block, includes rotationState
@@ -207,10 +194,13 @@ int main(int argc, char *argv[]) {
 					// Destroy current block, and replace with O block, includes rotationState
 				} else if (command == "Z") {
 					// Destroy current block, and replace with Z block, includes rotationState
-				} else if (command == "restart") {
-					// restart
+				} */
+				else if (command == "restart") {
+					// restarts on same level
+					delete g;
+					grid *g = new grid;
+					g->SetBoard(level, scriptfile);
 				} 
-				*/ 
 				else {
 					cout << "Invalid command! Please enter a valid command." << endl;
 					break;
@@ -218,8 +208,10 @@ int main(int argc, char *argv[]) {
 			}
 			// TODO: Case draws board even if the command is invalid.
 			//FATIMA: ADD HEAVY FN HERE.
+			if (command == "down" || command == "left" || command == "right" || command == "clockwise" || command == "counterclockwise") {
 			g->getCurrentBlock()->Heavy(g->returnBoard());
 			g->getCurrentBlock()->updateBoard(g->returnBoard());
+			}
 			g->DrawBoard();
 			// reset repeat
 			repeat = 1;

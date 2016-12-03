@@ -19,6 +19,7 @@ protected:
 
 public:
 	virtual	~block();
+	virtual void deleteBlock();
 	virtual void initialize(std::string** board, int level_num)=0;
 	virtual void updateBoard(std::string** board)=0;
 	virtual void clockwise(std::string** board)=0;

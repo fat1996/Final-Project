@@ -9,7 +9,6 @@ const int boardheight=18;
 const int boardwidth=11;
 
 class grid {
-	std::vector<block*> activeBlocks;
 	block* currentBlock;
 	block* nextBlock;
 	Level* level;
@@ -27,5 +26,7 @@ public:
 	~grid(); //destructor.
 	block* getCurrentBlock();
 	block* getNextBlock();
+	void levelUp();
+	void levelDown(std::string scriptfile);
 };
 

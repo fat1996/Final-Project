@@ -29,6 +29,7 @@ Level0::Level0(string scriptfile) : Level(0) {
 // Destructor
 Level0::~Level0() {
 	sequence.clear();
+	curPos = 0;
 }
 
 // Returns new block

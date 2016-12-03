@@ -8,6 +8,7 @@
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
+#include "level4.h"
 
 using namespace std;
 
@@ -17,13 +18,9 @@ grid::~grid(){
 	}
 	delete [] board;
 	delete level;
+	currentBlock->deleteBlock();
 	delete currentBlock;
 	delete nextBlock;
-	int size = activeBlocks.size();
-	for (int i = 0; i < size ; i++) {
-		delete (activeBlocks[i]);
-		} 
-	activeBlocks.clear();
 }
 
 map<int, int> grid::returnRows(){
@@ -55,7 +52,6 @@ void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the ini
 	}
 	currentBlock = level->getNextBlock();
 	currentBlock->initialize(this->board, level_num);
-	activeBlocks.push_back(currentBlock);
 	nextBlock = level->getNextBlock();
 }
 
@@ -77,7 +73,36 @@ block* grid::getCurrentBlock() {
 block* grid::getNextBlock() {
 	this->currentBlock = this->nextBlock;
 	currentBlock->initialize(this->board, level->getLevel());
-	activeBlocks.push_back(currentBlock);
 	this->nextBlock = this->level->getNextBlock();
 	return this->nextBlock;
+}
+
+// Main already handles case where curLevel is 4
+void grid::levelUp() {
+	int curLevel = level->getLevel();
+	delete level;
+	if (curLevel == 0) {
+		level = new Level1();
+	} else if (curLevel == 1) {
+		level = new Level2();
+	} else if (curLevel == 2) {
+		level = new Level3();
+	} else {
+		level = new Level4();
+	}
+}
+
+// Main already handles case where curLevel is 0
+void grid::levelDown(string scriptfile) {
+	int curLevel = level->getLevel();
+	delete level;
+	if (curLevel == 1) {
+		level = new Level0(scriptfile);
+	} else if (curLevel == 2) {
+		level = new Level1();
+	} else if (curLevel == 3) {
+		level = new Level2();
+	} else {
+		level = new Level3();
+	}
 }

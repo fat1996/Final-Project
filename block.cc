@@ -4,7 +4,11 @@
 
 using namespace std;
 
-block::~block() { 
+// Default destructor used for next block
+block::~block() {}
+
+// Destructor for initialized block
+void block::deleteBlock() { 
 	for(int i=0 ; i<4; i++) {
 		delete blockCoord[i];
 	}
