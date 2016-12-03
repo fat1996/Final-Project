@@ -61,7 +61,7 @@ void grid::drawNextBlock() {
 	if (type == 'J') {
 		cout << "J\nJJJ" << endl;
 	} else if (type == 'I') {
-		cout << "I\nI\nI\nI" << endl;
+		cout << "IIII" << endl;
 	} else if (type == 'L') {
 		cout << "  L\nLLL" << endl;
 	} else if (type == 'O') {
