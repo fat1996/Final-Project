@@ -55,6 +55,27 @@ void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the ini
 	nextBlock = level->getNextBlock();
 }
 
+void grid::drawNextBlock() {
+	char type = nextBlock->getType();
+	cout << "\nNext:" << endl;
+	if (type == 'J') {
+		cout << "J\nJJJ" << endl;
+	} else if (type == 'I') {
+		cout << "I\nI\nI\nI" << endl;
+	} else if (type == 'L') {
+		cout << "  L\nLLL" << endl;
+	} else if (type == 'O') {
+		cout << "OO\nOO" << endl;
+	} else if (type == 'Z') {
+		cout << "ZZ \n ZZ" << endl;
+	} else if (type == 'S') {
+		cout << " SS\nSS " << endl;
+	} else {
+		cout << "TTT\n T" << endl;
+	}
+	cout << "\n" << endl;
+}
+
 void grid::DrawBoard() {
 	cout<<"---------------"<<endl;
 	for (int i=0 ; i<boardheight ;i++) {
@@ -64,6 +85,7 @@ void grid::DrawBoard() {
 	cout<<endl;
 	}
 	cout<<"---------------"<<endl;
+	drawNextBlock();
 }
 
 block* grid::getCurrentBlock() {

@@ -21,6 +21,7 @@ class grid {
 public:
 	void SetBoard(int level_num, std::string scriptfile);   //this sets up the initial configuration of the board.
 	void DrawBoard();
+	void drawNextBlock();
 	std::string** returnBoard();  //returns the private member, board.
 	std::map<int, int> returnRows();  //returns the private member, emptyRows.
 	~grid(); //destructor.

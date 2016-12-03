@@ -5,6 +5,7 @@
 
 class jblock: public block{
 public:
+	jblock();
 	void initialize(std::string** board, int level_num) override;
 	void clockwise(std::string** board) override;
 	void anticlockwise(std::string** board) override;

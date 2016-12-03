@@ -1,9 +1,12 @@
 #include <iostream>
 #include <map>
 #include "tblock.h"
+#include "block.h"
 
 using namespace std;
 
+// Constructor that sets type
+tblock::tblock() : block{'T'} {}
 
 void tblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;

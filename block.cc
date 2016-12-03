@@ -4,6 +4,16 @@
 
 using namespace std;
 
+// Constructor 
+block::block(char c) {
+	type = c;
+}
+
+// Typer gettor
+char block::getType() {
+	return type;
+}
+
 // Default destructor used for next block
 block::~block() {}
 

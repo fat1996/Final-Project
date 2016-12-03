@@ -1,8 +1,12 @@
 #include <iostream>
 #include <map>
 #include "lblock.h"
+#include "block.h"
 
 using namespace std;
+
+// Constructor that sets type
+lblock::lblock() : block{'L'} {}
 
 void lblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;

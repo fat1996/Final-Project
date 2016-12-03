@@ -9,7 +9,8 @@ const int rightBorder=11;
 const int rowCap=11;
 
 class block {
-protected:	
+ protected:
+	char type;	
 	Coordinate *blockCoord[4];  //pointer to the 4 set of coordinates of a block.
 	int state;  //for cw motion.
 	Coordinate *carriedOver;  //for cw motion.
@@ -17,7 +18,9 @@ protected:
 	int level;
 	bool isHeavy;
 
-public:
+ public:
+ 	block(char c);
+	char getType();
 	virtual	~block();
 	virtual void deleteBlock();
 	virtual void initialize(std::string** board, int level_num)=0;

@@ -1,8 +1,12 @@
 #include <iostream>
 #include <map>
 #include "oblock.h"
+#include "block.h"
 
 using namespace std;
+
+// Constructor that sets type
+oblock::oblock() : block{'O'} {}
 
 void oblock::updateBoard(string** board){
 for(int i=0;i<4;i++){

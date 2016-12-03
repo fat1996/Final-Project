@@ -4,6 +4,7 @@
 #include <string>
 #include "coordinate.h"
 #include "jblock.h"
+#include "block.h"
 
 //const int bottomRow=14;
 //const int leftBorder=0;
@@ -13,6 +14,9 @@ using namespace std;
 //helper fn for drop and down.
 //when you calculate a new set of coordinates, you have to see if those new coordinates are already the old coordinates of the block(in cases of overlap).
 //this function returns true if the new coordinates have an overlap with the old coordinates of the block.
+
+// Constructor that sets type
+jblock::jblock() : block{'J'} {}
 
 void jblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;

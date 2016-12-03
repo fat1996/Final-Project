@@ -1,8 +1,12 @@
 #include <iostream>
 #include <map>
 #include "iblock.h"
+#include "block.h"
 
 using namespace std;
+
+// Constructor that sets type
+iblock::iblock() : block('I') {}
 
 void iblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;

@@ -5,6 +5,7 @@
 
 class oblock: public block{
 public:
+	oblock();
 	void initialize(std::string** board, int level_num) override;
 	void clockwise(std::string** board) override;
 	void anticlockwise(std::string** board) override;
