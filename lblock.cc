@@ -1,12 +1,8 @@
 #include <iostream>
 #include <map>
 #include "lblock.h"
-#include "block.h"
 
 using namespace std;
-
-// Constructor that sets type
-lblock::lblock() : block{'L'} {}
 
 void lblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
@@ -26,9 +22,11 @@ y=y1;
 }
 }
 cout<<"Carried over: "<<x<<", "<<y<<endl;
-carriedOver->setCoord(x, y);   //greatest x, lowest y.
+carriedOver->setCoord(x, y); 
 
-//you know what the new set of coordinates are going to be.
+if((x-1)<topBorder || (x-2)<topBorder || (y+1)>(rightBorder-1)){}
+	else {
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
 	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
@@ -47,39 +45,42 @@ blockCoord[3]->setCoord(x-2, y);
 state=2;
 }
 }
+}
 
 else if(state==2){
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
-
-cout<<"State: "<<state<<", carriedOver: "<<x<<", "<<y<<endl;
-
-//you know what the new set of coordinates are going to be.
+cout<<"x, y: "<<x<<", "<<y<<endl;
+if((y+1)>(rightBorder-1) || (y+2)>(rightBorder-1) || (x-1)<topBorder){}
+	else{
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
-if((board[x][y]==" " || isPresent(x, y)==true) && 
-	(board[x-1][y+2]==" " || isPresent(x-1, y+2)==true) && 
+if((board[x-1][y]==" " || isPresent(x-1, y)==true) && 
 	(board[x-1][y+1]==" " || isPresent(x-1, y+1)==true) && 
-	(board[x-1][y]==" " || isPresent(x-1, y)==true)){
+	(board[x-1][y+2]==" " || isPresent(x-1, y+2)==true) && 
+	(board[x][y]==" " || isPresent(x, y)==true)){
 for(int j=0;j<4;j++){
 Coordinate *c=blockCoord[j];
 int x=c->getX(c);
 int y=c->getY(c);
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 }
-blockCoord[0]->setCoord(x, y);
-blockCoord[1]->setCoord(x-1, y+2);
-blockCoord[2]->setCoord(x-1, y+1);
-blockCoord[3]->setCoord(x-1, y);
+blockCoord[0]->setCoord(x-1, y);
+blockCoord[1]->setCoord(x-1, y+1);
+blockCoord[2]->setCoord(x-1, y+2);
+blockCoord[3]->setCoord(x, y);
 state=3;
+}
 }
 }
 
 else if(state==3){
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
-cout<<"State: "<<state<<", carriedOver: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
-
-//you know what the new set of coordinates are going to be.
+cout<<"x, y: "<<x<<", "<<y<<endl;
+if((x-1)<topBorder || (x-2)<topBorder || (y+1)>(rightBorder-1)){}
+	else{
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y+1]==" " || isPresent(x, y+1)==true) && 
 	(board[x-1][y+1]==" " || isPresent(x-1, y+1)==true) && 
@@ -98,14 +99,15 @@ blockCoord[3]->setCoord(x-2, y);
 state=4;
 }
 }
+}
 
 else if(state==4){
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
-//carriedOver->setCoord(x, y);
-cout<<"State: "<<state<<", carriedOver: "<<carriedOver->getX(carriedOver)<<", "<<carriedOver->getY(carriedOver)<<endl;
-
-//you know what the new set of coordinates are going to be.
+cout<<"x, y: "<<x<<", "<<y<<endl;
+if((y+1)>(rightBorder-1) || (y+2)>(rightBorder-1) || (x-1)<topBorder){}
+	else{
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
 	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
@@ -124,8 +126,7 @@ blockCoord[3]->setCoord(x-1, y+2);
 state=1;
 }
 }
-//call heavy function after every move.
-this->Heavy(board);
+}
 }
 
 void lblock::anticlockwise(string** board){
@@ -149,8 +150,6 @@ for(int i=0;i<3;i++){
 	this->clockwise(board);
 }
 }
-//call heavy function after every move.
-this->Heavy(board);
 }
 
 void lblock::updateBoard(string** board){
@@ -168,7 +167,7 @@ void lblock::initialize(string** board, int level_num){
 state=1;
 level=level_num;
 //set isHeavy.
-if(level_num==0 || level_num==1 || level_num==2){
+if(level_num<=2){
 	isHeavy=false;
 }
 else {

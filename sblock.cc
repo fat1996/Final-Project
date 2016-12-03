@@ -1,12 +1,8 @@
 #include <iostream>
 #include <map>
 #include "sblock.h"
-#include "block.h"
 
 using namespace std;
-
-// Constructor that sets type
-sblock::sblock() : block{'S'} {}
 
 void sblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
@@ -28,7 +24,9 @@ y=y1;
 cout<<"Carried over: "<<x<<", "<<y<<endl;
 carriedOver->setCoord(x, y);  //lowest x, lowest y.
 
-//you know what the new set of coordinates are going to be.
+if((x+1)>bottomRow || (x-1)<topBorder || (y-1)<leftBorder){}
+	else{
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
 	(board[x][y-1]==" " || isPresent(x, y-1)==true) && 
@@ -47,13 +45,15 @@ blockCoord[3]->setCoord(x-1, y-1);
 state=2;
 }
 }
+}
 
 else if(state==2){
 	int x=carriedOver->getX(carriedOver);
 	int y=carriedOver->getY(carriedOver);
-cout<<"State: "<<state<<", carriedOver: "<<x<<", "<<y<<endl;
 
-//you know what the new set of coordinates are going to be.
+if((x+1)>bottomRow || (y+1)>(rightBorder-1) || (y-1)<leftBorder){}
+	else{
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
 	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
@@ -72,8 +72,7 @@ blockCoord[3]->setCoord(x+1, y);
 state=1;
 }
 }
-//call heavy function after every move.
-this->Heavy(board);
+}
 }
 
 void sblock::anticlockwise(string** board){
@@ -83,8 +82,6 @@ if(state==1){  //call cw 3 times.
 else if(state==2){  
 	this->clockwise(board);
 }
-//call heavy function after every move.
-this->Heavy(board);
 }
 
 void sblock::updateBoard(string** board){
@@ -102,7 +99,7 @@ void sblock::initialize(string** board, int level_num){
 state=1;
 level=level_num;
 //set isHeavy.
-if(level_num==0 || level_num==1 || level_num==2){
+if(level_num<=2){
 	isHeavy=false;
 }
 else {

@@ -1,12 +1,8 @@
 #include <iostream>
 #include <map>
 #include "zblock.h"
-#include "block.h"
 
 using namespace std;
-
-// Constructor that sets type
-zblock::zblock() : block{'Z'} {}
 
 void zblock::clockwise(string** board){
 cout<<"Current state of block: "<<state<<endl;
@@ -28,7 +24,9 @@ y=y1;
 cout<<"Carried over: "<<x<<", "<<y<<endl;
 carriedOver->setCoord(x, y);
 
-//you know what the new set of coordinates are going to be.
+if((x+1)>bottomRow || (x-1)<topBorder || (y+1)>(rightBorder-1)){}
+	else{
+		//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
 	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
@@ -47,14 +45,15 @@ blockCoord[3]->setCoord(x-1, y+1);
 state=2;
 }
 }
+}
 
 else if(state==2){
-int x=carriedOver->getX(carriedOver);
-int y=carriedOver->getY(carriedOver);
+	int x=carriedOver->getX(carriedOver);
+	int y=carriedOver->getY(carriedOver);
 
-cout<<"State: "<<state<<", carriedOver: "<<x<<", "<<y<<endl;
-
-//you know what the new set of coordinates are going to be.
+	if((x+1)>bottomRow || (y+1)>(rightBorder-1) || (y+2)>(rightBorder-1)){}
+		else{
+			//you know what the new set of coordinates are going to be.
 //1st, check if those blocks are empty.
 if((board[x][y]==" " || isPresent(x, y)==true) && 
 	(board[x][y+1]==" " || isPresent(x, y+1)==true) && 
@@ -73,8 +72,7 @@ blockCoord[3]->setCoord(x+1, y+2);
 state=1;
 }
 }
-//call heavy function after every move.
-this->Heavy(board);
+}
 }
 
 void zblock::anticlockwise(string** board){
@@ -84,8 +82,6 @@ if(state==1){
 else if(state==2){  
 	this->clockwise(board);
 }
-//call heavy function after every move.
-this->Heavy(board);
 }
 
 void zblock::updateBoard(string** board){
@@ -102,7 +98,7 @@ void zblock::initialize(string** board, int level_num){
 state=1;
 level=level_num;
 //set isHeavy.
-if(level_num==0 || level_num==1 || level_num==2){
+if(level_num<=2){
 	isHeavy=false;
 }
 else {
