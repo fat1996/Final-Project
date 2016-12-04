@@ -159,9 +159,12 @@ int main(int argc, char *argv[]) {
 					g->getCurrentBlock()->anticlockwise(g->returnBoard());
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
 				} else if (command == "drop") {
-			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard());
+					vector<history*> &v=g->returnGridList();
+					int c=0;
+					int &count=c;
+			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v);
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
-			 		g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()));
+			 g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()), v, count);
 			 		g->getNextBlock();
 				} else if (command == "levelup") {
 					if (level == 4) {

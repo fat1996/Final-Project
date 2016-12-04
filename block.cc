@@ -1,6 +1,7 @@
 #include <iostream>
 #include "coordinate.h"
 #include "block.h"
+#include "history.h"
 
 using namespace std;
 
@@ -24,13 +25,16 @@ void block::deleteBlock() {
 	}
 }
 
-void block::updateScore(string **board, map<int, int> emptyRows){
+bool block::updateScore(string **board, map<int, int> emptyRows, vector<history*> ongrid, int &counter){
 cout<<"Drop has been executed. Check if any rows are completely filled and update grid."<<endl;
+cout<<"size of ongrid vector: "<<ongrid.size()<<endl;
+
 
 for(int i=bottomRow;i>=1;i--){
 	cout<<"Row number: "<<i<<", val: "<<emptyRows[i]<<endl;
 if(emptyRows[i]==2){  //row is completely full.
 cout<<"Row: "<<i<<" is full."<<endl;
+++counter;
 
 for(int i1=i;i1>=1;i1--){
 	for(int j1=0;j1<rightBorder;j1++){
@@ -46,7 +50,7 @@ emptyRows=updateRows(emptyRows, board);
 
 for(int i=0;i<=bottomRow;i++){
 	if(emptyRows[i]==2){
-		updateScore(board, updateRows(emptyRows, board));
+		updateScore(board, updateRows(emptyRows, board), ongrid, counter);
 		break;
 	}
 }
@@ -57,6 +61,14 @@ for(int i=0;i<=bottomRow;i++){
 		cout<<board[i][j];
 	}
 	cout<<endl;
+}
+
+cout<<"No of lines cleared: "<<counter<<endl;
+if(counter>0){
+	return true;
+}
+else{
+	return false;
 }
 }
 
@@ -117,7 +129,7 @@ return present;
 }
 
 //the bottom-most row is the one with the highest index.
-void block::drop(map<int, int> returnRows, string** board) {
+void block::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid) {
 returnRows=updateRows(returnRows, board);
 
 //Iterate through the map of rows, to check if the bottommost row is empty or not.
@@ -183,6 +195,8 @@ cout<<"Row "<<i<<" is completely filled."<<endl;
 
 /*******************************************************************************************/
 else {  //completely empty(0).
+history *h=new history();
+vector<Coordinate*> v=h->accessGrid();
 cout<<"Row "<<i<<" is completely empty."<<endl;
 int maxRow=0;
 
@@ -193,8 +207,7 @@ Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 if(x>maxRow){
 maxRow=x;
-}
-}
+}}
 int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
 cout<<"Delta: "<<delta<<endl;
 
@@ -209,10 +222,20 @@ cout<<j<<": "<<x<<", "<<y<<endl;
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 blockCoord[j]=new Coordinate;
 blockCoord[j]->setCoord(newX, y);
+v.push_back(blockCoord[j]);
+cout<<"size: "<<v.size()<<endl;
 }
+cout<<"Drop has been executed. Here's the vector of coordinates: "<<v.size()<<endl;
+// for(int i=0;i<4;i++){
+// 	Coordinate *c=v[i];
+// 	int x=c->getX(c);
+// 	int y=c->getY(c);
+// 	cout<<"x, y: "<<x<<", "<<y<<endl;
+// }
+ongrid.push_back(h);
+cout<<"Drop has been executed. size of array in grid.h"<<ongrid.size()<<endl;
 break;
 }
-/*******************************************************************************************/
 }
 }
 
