@@ -97,7 +97,7 @@ block::block(char c) {
 	type = c;
 }
 
-// Typer gettor
+// Type gettor
 char block::getType() {
 	return type;
 }

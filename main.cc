@@ -26,6 +26,7 @@ int norandomPos = 0;
 vector<string> commandSeq;
 int commandSeqPos = 0;
 bool commandSet = false; // sequence feature
+int movesWithoutClearingRow = 0;
 
 // map to keep track of name of command
 map<string, string> commandMap;
@@ -213,7 +214,14 @@ int main(int argc, char *argv[]) {
 					int &count=c;
 			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v);
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
-					g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()), v, count);
+					bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()), v, count);
+					if (level = 4 && !cleared) {
+						++movesWithoutClearingRow;
+						if (movesWithoutClearingRow == 5) {
+							// drop starblock
+							movesWithoutClearingRow = 0;
+						}
+					}
 			 		if (randomSeq == true) {
 						g->getNextBlock();
 					} else {
