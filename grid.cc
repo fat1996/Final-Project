@@ -96,12 +96,26 @@ block* grid::getCurrentBlock() {
 	return this->currentBlock;
 }
 
+block* grid::returnNextBlock() {
+	return this->nextBlock;
+}
+
 block* grid::getNextBlock() {
 	this->currentBlock = this->nextBlock;
 	currentBlock->initialize(this->board, level->getLevel());
 	this->nextBlock = this->level->getNextBlock();
 	return this->nextBlock;
 }
+
+void grid::setCurrentBlock(block* b) {
+	currentBlock = b;
+	currentBlock->initialize(this->board, level->getLevel());
+}
+
+void grid::setNextBlock(block* b) {
+	nextBlock = b;
+}
+
 
 // Main already handles case where curLevel is 4
 void grid::levelUp() {

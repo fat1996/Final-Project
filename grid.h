@@ -26,6 +26,9 @@ public:
 	~grid(); //destructor.
 	block* getCurrentBlock();
 	block* getNextBlock();
+	block* returnNextBlock();
+	void setNextBlock(block* b);
+	void setCurrentBlock(block* b);
 	void levelUp();
 	void levelDown(std::string scriptfile);
 };
