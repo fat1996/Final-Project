@@ -178,9 +178,13 @@ else {
 }
 
 carriedOver=new Coordinate;
-carriedOver->setCoord(0, 0);
+carriedOver->setCoord(3, 0);
 
-blockCoord[0]=new Coordinate;
+if(board[3][0]!=" " && board[3][1]!=" " && board[4][1]!=" " && board[3][2]!=" "){
+	cout<<"GAME OVER!!!!!"<<endl;
+}
+else {
+	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 
 blockCoord[1]=new Coordinate;
@@ -198,6 +202,7 @@ int x=c->getX(c);
 int y=c->getY(c);
 cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="T";
+}
 }
 }
 

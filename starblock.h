@@ -17,7 +17,7 @@ class StarBlock : public block {
  	void updateBoard(std::string** board) override;
 	void clockwise(std::string** board) override;
 	void anticlockwise(std::string** board) override;
-	void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid) override;
+	void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid, int level) override;
 };
 
 #endif

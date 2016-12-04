@@ -47,7 +47,7 @@ void StarBlock::updateBoard(std::string** board) {
 	board[x][y] = "*";
 }
 
-void StarBlock::drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid){
+void StarBlock::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid, int level){
 	returnRows=updateRows(returnRows, board);
 	history *h=new history();
 	vector<Coordinate*> v=h->accessGrid();

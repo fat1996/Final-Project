@@ -15,11 +15,15 @@ class grid {
 	std::string **board;
 	std::map<int, int> emptyRows;
 	std::vector<history*> GridList;
+	bool gameOver;
+	int currentScore;
 
 public:
 	void SetBoard(int level_num, std::string scriptfile);   //this sets up the initial configuration of the board.
 	void DrawBoard();
 	void drawNextBlock();
+	bool &returnGameOver();
+	int &returnCurScore();
 	std::vector<history*> &returnGridList();  //returns the private member GridList.
 	std::string** returnBoard();  //returns the private member, board.
 	std::map<int, int> returnRows();  //returns the private member, emptyRows.
