@@ -22,23 +22,29 @@ Level3::Level3() : Level(3) {}
 // Destructor
 Level3::~Level3() {}
 
-// TODO Heavy block implementation
-// Returns new block
+// Returns next block
 block* Level3::getNextBlock() {
-	int randomNum = rand() % 9 + 1;
+	int randomNum = rand() % 9 + 1; // Generates number from 1-9
 	if (randomNum == 1) {
+		// 1/9 chance
 		return new iblock;
 	} else if (randomNum == 2) {
+		// 1/9 chance
 		return new jblock;
 	} else if (randomNum == 3) {
+		// 1/9 chance
 		return new lblock;
 	} else if (randomNum == 4) {
+		// 1/9 chance
 		return new tblock;
 	} else if (randomNum == 5) {
+		// 1/9 chance
 		return new oblock;
 	} else if (randomNum == 6 || randomNum == 7) {
+		// 2/9 chance
 		return new sblock;
 	} else {
+		// 2/9 chance
 		return new zblock;
 	}
 }

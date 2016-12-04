@@ -22,9 +22,10 @@ Level2::Level2() : Level(2) {}
 // Destructor
 Level2::~Level2() {}
 
-// Returns new block
+// Returns next block
 block* Level2::getNextBlock() {
-	int randomNum = rand() % 7 + 1;
+	int randomNum = rand() % 7 + 1; // Generates number from 1-7
+	// All blocks have equal probability of generation: 1/7
 	if (randomNum == 1) {
 		return new iblock;
 	} else if (randomNum == 2) {

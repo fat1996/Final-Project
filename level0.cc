@@ -32,7 +32,7 @@ Level0::~Level0() {
 	curPos = 0;
 }
 
-// Returns new block
+// Returns next block from sequence
 block* Level0::getNextBlock() {
 	int pos = curPos;
 	curPos = (curPos + 1) % sequence.size(); // Repeats blocks in sequence
@@ -51,7 +51,7 @@ block* Level0::getNextBlock() {
 	} else if (sequence[pos] == "Z") {
 		return new zblock;
 	} else {
-		cout << "sequence.txt has unexpected value. J-Block created." << endl;
+		cerr << "sequence.txt has unexpected value. J-Block created." << endl;
 		return new jblock;
 	}
 }

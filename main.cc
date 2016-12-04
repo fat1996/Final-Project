@@ -12,6 +12,7 @@
 #include "oblock.h"
 #include "zblock.h"
 #include "tblock.h"
+#include "starblock.h"
 
 using namespace std;
 
@@ -215,10 +216,14 @@ int main(int argc, char *argv[]) {
 			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v);
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
 					bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()), v, count);
-					if (level = 4 && !cleared) {
+					if (level == 4 && !cleared) {
 						++movesWithoutClearingRow;
 						if (movesWithoutClearingRow == 5) {
 							// drop starblock
+							StarBlock* star = new StarBlock;
+							star->initialize(g->returnBoard(), 4);
+							star->drop(g->returnRows(), g->returnBoard(), v);
+							star->updateBoard(g->returnBoard());
 							movesWithoutClearingRow = 0;
 						}
 					}

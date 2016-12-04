@@ -31,7 +31,7 @@ class block {
 	virtual void clockwise(std::string** board)=0;
 	virtual void anticlockwise(std::string** board)=0;
 	void printBlock();
-	void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid);  
+	virtual void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid);  
 	std::map<int, int> updateRows(std::map<int, int> returnRows, std::string** board);	
 	void left(std::string** board);
 	void right(std::string **board);
