@@ -2,16 +2,8 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
-#include <vector>
 #include "block.h"
 #include "grid.h"
-#include "iblock.h"
-#include "jblock.h"
-#include "lblock.h"
-#include "sblock.h"
-#include "oblock.h"
-#include "zblock.h"
-#include "tblock.h"
 
 using namespace std;
 
@@ -20,13 +12,9 @@ bool textOnly = false;
 int level = 0;
 int repeat = 1;
 unsigned int seed = time(NULL);
-bool randomSeq = true; // random feature for level 3 + 4
-vector<string> norandomBlocks;
-int norandomPos = 0;
-vector<string> commandSeq;
-int commandSeqPos = 0;
-bool commandSet = false; // sequence feature
-int movesWithoutClearingRow = 0;
+int hs=0;  //highscore.
+int &highScore=hs;
+
 
 // map to keep track of name of command
 map<string, string> commandMap;
@@ -41,9 +29,6 @@ void createCommandMap() {
 	commandMap["drop"] = "drop";
 	commandMap["levelup"] = "levelup";
 	commandMap["leveldown"] = "leveldown";
-	commandMap["norandom"] = "norandom";
-	commandMap["random"] = "random";
-	commandMap["sequence"] = "sequence";
 	commandMap["restart"] = "restart";
 }
 
@@ -128,29 +113,7 @@ string determineCommand(string command) {
 	}
 }
 
-// Generates next block in non-random block sequence
-block* generateNorandomBlock() {
-	int curNorandomPos = norandomPos;
-	norandomPos = (curNorandomPos + 1) % norandomBlocks.size(); // repeats sequence
-	string block = norandomBlocks[curNorandomPos];
-	if (block == "J") {
-		return new jblock;
-	} else if (block == "I") {
-		return new iblock;
-	} else if (block == "O") {
-		return new oblock;
-	} else if (block == "S") {
-		return new sblock;
-	} else if (block == "T") {
-		return new tblock;
-	} else if (block == "Z") {
-		return new zblock;
-	} else {
-		return new lblock;
-	}
-}
-
-
+// TODO HANDLE BLOCK DESTRUCTOR TO DELETE NEXT BLOCK AND CHECK SEG FAULTS
 int main(int argc, char *argv[]) {
 	createCommandMap();
 	int result = executeCommandLine(argc, argv);
@@ -164,17 +127,7 @@ int main(int argc, char *argv[]) {
 	g->DrawBoard();
 
 	string command;
-	while (commandSet == true || cin >> command) {
-		if (commandSet) {
-			int size = commandSeq.size();
-			if (commandSeqPos + 1 == size) {
-				command = commandSeq[commandSeqPos];
-				commandSet = false;
-			} else {
-				command = commandSeq[commandSeqPos];
-				++commandSeqPos;
-			}
-		}
+	while (cin >> command) {
 		if (command == "rename") {
 			string oldName;
 			string newName;
@@ -211,23 +164,15 @@ int main(int argc, char *argv[]) {
 				} else if (command == "drop") {
 					vector<history*> &v=g->returnGridList();
 					int c=0;
-					int &count=c;
-			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v);
+					int d=0;
+					int &counter=c;
+					int &count=d;
+			 		g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v, level);
 			 		g->getCurrentBlock()->updateBoard(g->returnBoard());
-					bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()), v, count);
-					if (level = 4 && !cleared) {
-						++movesWithoutClearingRow;
-						if (movesWithoutClearingRow == 5) {
-							// drop starblock
-							movesWithoutClearingRow = 0;
-						}
-					}
-			 		if (randomSeq == true) {
-						g->getNextBlock();
-					} else {
-						g->setCurrentBlock(g->returnNextBlock());
-						g->setNextBlock(generateNorandomBlock());
-					} 
+					g->getCurrentBlock()->updateScore(g->returnBoard(), 
+						g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()), 
+						v, counter, g->returnCurScore(), highScore, level, count);
+			 		g->getNextBlock();
 				} else if (command == "levelup") {
 					if (level == 4) {
 						cout << "You are at the highest level" << endl;
@@ -244,41 +189,8 @@ int main(int argc, char *argv[]) {
 						g->levelDown(scriptfile);
 						level--;
 					}
-				} else if (command == "norandom") {
-					if (level < 3) {
-						cout << "This feature is only valid in level 3 and 4" << endl;
-					} else {
-						string filename;
-						cin >> filename;
-						ifstream readfile {filename};
-						string block;
-						while (readfile >> block) {
-							norandomBlocks.push_back(block);
-						}
-						randomSeq = false;
-						delete g->returnNextBlock();
-						g->setNextBlock(generateNorandomBlock());
-					}
-				} else if (command == "random") {
-					if (level < 3) {
-						cout << "This feature is only valid in level 3 and 4" << endl;
-					} else {
-						norandomBlocks.clear();
-						randomSeq = true;
-						norandomPos = 0;
-					}
-				} else if (command == "sequence") {
-					string filename;
-					cin >> filename;
-					ifstream readfile {filename};
-					string setCommand;
-					while (readfile >> setCommand) {
-						commandSeq.push_back(setCommand);
-					}
-					commandSet = true;
-					commandSeqPos = 0;
-				}	
-				/* else if (command == "I") {
+				} 
+				/*  else if (command == "I") {
 					// Destroy current block, and replace with I block, includes rotationState
 				} else if (command == "J") {
 					// Destroy current block, and replace with J block, includes rotationState
@@ -298,6 +210,7 @@ int main(int argc, char *argv[]) {
 					delete g;
 					grid *g = new grid;
 					g->SetBoard(level, scriptfile);
+					cout<<"curscore: "<<g->returnCurScore()<<", highscore: "<<highScore<<endl;
 				} 
 				else {
 					cout << "Invalid command! Please enter a valid command." << endl;

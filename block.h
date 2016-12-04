@@ -31,13 +31,14 @@ class block {
 	virtual void clockwise(std::string** board)=0;
 	virtual void anticlockwise(std::string** board)=0;
 	void printBlock();
-	void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid);  
+	void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid, int level);  
 	std::map<int, int> updateRows(std::map<int, int> returnRows, std::string** board);	
 	void left(std::string** board);
 	void right(std::string **board);
 	void down(std::string **board);
 	bool isPresent(int x, int y);	
 	void Heavy(std::string **board);  //checks the level on which the block was generated, and executes down accordingly.
-	bool updateScore(std::string **board, std::map<int, int> returnRows, std::vector<history*> ongrid, int &counter);  //checks if any row has been completely filled. If yes, then shift grid downwards. update score accordingly.
+	bool updateScore(std::string **board, std::map<int, int> returnRows, std::vector<history*> ongrid, int &counter, 
+					int &curScore, int &highScore, int curLevel, int &count);  //checks if any row has been completely filled. If yes, then shift grid downwards. update score accordingly.
 };
 #endif

@@ -35,7 +35,19 @@ vector<history*> &grid::returnGridList(){
 	return GridList;
 }
 
+bool &grid::returnGameOver(){
+	return gameOver;
+}
+
+int &grid::returnCurScore(){
+	return currentScore;
+}
+
+
 void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the initial configuration of the board.
+	gameOver=false;
+	currentScore=0;
+	
 	board = new string*[boardheight];
 	for(int i=0; i<boardheight ; i++) {
 		board[i] = new string[boardwidth];
@@ -96,26 +108,12 @@ block* grid::getCurrentBlock() {
 	return this->currentBlock;
 }
 
-block* grid::returnNextBlock() {
-	return this->nextBlock;
-}
-
 block* grid::getNextBlock() {
 	this->currentBlock = this->nextBlock;
 	currentBlock->initialize(this->board, level->getLevel());
 	this->nextBlock = this->level->getNextBlock();
 	return this->nextBlock;
 }
-
-void grid::setCurrentBlock(block* b) {
-	currentBlock = b;
-	currentBlock->initialize(this->board, level->getLevel());
-}
-
-void grid::setNextBlock(block* b) {
-	nextBlock = b;
-}
-
 
 // Main already handles case where curLevel is 4
 void grid::levelUp() {

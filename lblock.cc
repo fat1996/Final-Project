@@ -169,6 +169,7 @@ void lblock::initialize(string** board, int level_num){
 
 state=1;
 level=level_num;
+cout<<"BLOCK GENERATED ON: "<<level<<endl;
 //set isHeavy.
 if(level_num<=2){
 	isHeavy=false;
@@ -180,7 +181,11 @@ else {
 carriedOver=new Coordinate;
 carriedOver->setCoord(0, 0);
 
-blockCoord[0]=new Coordinate;
+if(board[3][2]!=" " && board[4][0]!=" " && board[4][1]!=" " && board[4][2]!=" "){
+	cout<<"GAME OVER!!!!!"<<endl;
+}
+else {
+	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 2);
 
 blockCoord[1]=new Coordinate;
@@ -198,5 +203,6 @@ int x=c->getX(c);
 int y=c->getY(c);
 cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="L";
+}
 }
 }
