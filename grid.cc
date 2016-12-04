@@ -31,6 +31,10 @@ string** grid::returnBoard(){
 	return board;
 }
 
+vector<history*> &grid::returnGridList(){
+	return GridList;
+}
+
 void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the initial configuration of the board.
 	board = new string*[boardheight];
 	for(int i=0; i<boardheight ; i++) {

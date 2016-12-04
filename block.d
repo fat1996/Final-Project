@@ -1,1 +1,1 @@
-block.o: block.cc coordinate.h block.h
+block.o: block.cc coordinate.h block.h history.h

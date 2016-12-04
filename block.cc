@@ -1,9 +1,96 @@
 #include <iostream>
+#include <vector>
 #include "coordinate.h"
 #include "block.h"
 #include "history.h"
 
 using namespace std;
+
+//the bottom-most row is the one with the highest index.
+void block::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid) {
+returnRows=updateRows(returnRows, board);
+history *h=new history();
+vector<Coordinate*> v=h->accessGrid();
+int maxRow=0;
+
+//this determines the lowest row of the block.
+for(int i=0;i<4;i++)
+{
+Coordinate *c=blockCoord[i];
+int x=c->getX(c);
+if(x>maxRow){
+maxRow=x;
+} }
+
+//this determines the lowest row of the block.
+for(int i=0;i<4;i++)
+{
+Coordinate *c=blockCoord[i];
+int x=c->getX(c);
+if(x>maxRow){
+maxRow=x;
+} }
+
+for(int i=1;i<=bottomRow-maxRow;i++){
+
+int delta=i;  //delta is what is added to the x-coord to get the new coord of the block
+cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
+
+int count=0;  
+//determine the new coordinates.
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int newX=x+delta;
+int y=c->getY(c);  //y-coord stays the same.
+bool Present=isPresent(newX, y);  //helper fn called.
+//now, we have a new set of coordinates. check if these coordinates are empty. if yes, drop. if not, do the same process for a diff index(i).
+if(board[newX][y]==" " || Present==true) ++count;
+}
+
+cout<<"count: "<<count<<endl;
+if(count==4){}
+else { 
+cout<<"this is where count!=4: "<<i<<endl;
+for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+int newX=x+delta-1;
+board[x][y]=" ";  //the previous coordinates of the block are set to empty.
+blockCoord[j]=new Coordinate;
+blockCoord[j]->setCoord(newX, y);
+v.push_back(blockCoord[j]);
+cout<<"New coord: "<<newX<<", "<<y<<endl;
+}
+break;
+}
+
+if(i==bottomRow-maxRow){
+	cout<<"we're at the last possibility"<<endl;
+	int size=h->accessGrid().size();
+	cout<<"SIZE: "<<size<<endl;
+	for(int j=0;j<4;j++){
+Coordinate *c=blockCoord[j];
+int x=c->getX(c);
+int y=c->getY(c);
+int newX=x+bottomRow-maxRow;
+board[x][y]=" ";  //the previous coordinates of the block are set to empty.
+blockCoord[j]=new Coordinate;
+blockCoord[j]->setCoord(newX, y);
+v.push_back(blockCoord[j]);
+cout<<"New coord: "<<newX<<", "<<y<<endl;
+}
+	break;
+}
+}
+
+h->accessGrid()=v;
+int size=h->accessGrid().size();
+cout<<"SIZE: "<<size<<endl;
+ongrid.push_back(h);
+cout<<"Drop has been executed. size of array in grid.h"<<ongrid.size()<<endl;
+}
 
 // Constructor 
 block::block(char c) {
@@ -34,8 +121,46 @@ for(int i=bottomRow;i>=1;i--){
 	cout<<"Row number: "<<i<<", val: "<<emptyRows[i]<<endl;
 if(emptyRows[i]==2){  //row is completely full.
 cout<<"Row: "<<i<<" is full."<<endl;
+//you need to look at all the coordinates in row i.
+for(int j=0;j<rightBorder;j++){
+int x=i;
+int y=j;
+cout<<"Coordinate "<<j<<" of row "<<i<<": "<<x<<", "<<y<<endl;
+//now you need to check if these coordinates exist in the vector of history objects.
+int size=ongrid.size();
+for(int z=0;z<size;z++){
+history *h=ongrid[z];
+vector<Coordinate*> v=h->accessGrid();
+cout<<"size of vector v: "<<v.size()<<endl;
+int vsize=v.size();
+for(int a=0;a<vsize;a++){
+	Coordinate *c=v[a];
+	int x1=c->getX(c);
+	int y1=c->getY(c);
+	if(x==x1 && y==y1){
+		cout<<"x, y: "<<x<<", "<<y<<" present at index: "<<i<<endl;
+		v.erase(v.begin()+a);
+	}}
+h->accessGrid()=v;
+}}
+
+cout<<"VECTOR HAS BEEN UPDATED."<<endl;
+int size=ongrid.size();
+for(int z=0;z<size;z++){
+history *h=ongrid[z];
+vector<Coordinate*> v=h->accessGrid();
+cout<<"size of vector v: "<<v.size()<<endl;
+int vsize=v.size();
+if(vsize==0){
+	//this is where score gets updated.
+	ongrid.erase(ongrid.begin()+z);
+}
+}
+
+cout<<"NEW size of ongrid: "<<ongrid.size()<<endl;
 ++counter;
 
+//this shifts everthing down.
 for(int i1=i;i1>=1;i1--){
 	for(int j1=0;j1<rightBorder;j1++){
 		int upperRow=i1-1;
@@ -126,117 +251,6 @@ Coordinate *c=blockCoord[i];
 }
 }
 return present;
-}
-
-//the bottom-most row is the one with the highest index.
-void block::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid) {
-returnRows=updateRows(returnRows, board);
-
-//Iterate through the map of rows, to check if the bottommost row is empty or not.
-for(int i=bottomRow;i>=0;i--) 
-{
-int index=i;
-cout<<"Index: "<<index<<endl;
-
-if(returnRows[index]==1)  //not completely filled.
-{
-cout<<"Row "<<i<<" is not completely filled."<<endl;
-int maxRow=0;
-
-//this determines the lowest row of the block.
-for(int i=0;i<4;i++)
-{
-Coordinate *c=blockCoord[i];
-int x=c->getX(c);
-if(x>maxRow){
-maxRow=x;
-} }
-
-int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-cout<<"maxRow"<<maxRow<<", Delta: "<<delta<<endl;
-
-int count=0;  
-cout<<"New coordinates: "<<endl;
-//determine the new coordinates.
-for(int j=0;j<4;j++){
-Coordinate *c=blockCoord[j];
-int x=c->getX(c);
-int newX=x+delta;
-int y=c->getY(c);  //y-coord stays the same.
-cout<<j<<": "<<newX<<", "<<y<<endl;
-
-bool Present=isPresent(newX, y);  //helper fn called.
-//now, we have a new set of coordinates. check if these coordinates are empty. if yes, drop. if not, do the same process for a diff index(i).
-if(board[newX][y]==" " || Present==true) ++count;
-cout<<"Count: "<<count<<endl;
-}
-
-cout<<"count: "<<count<<endl;
-if(count==4){
-//If count==3(perfect fit), then you have to set the new co-ordinates.
-for(int j=0;j<4;j++){
-Coordinate *c=blockCoord[j];
-int x=c->getX(c);
-int y=c->getY(c);
-int newX=x+delta;
-board[x][y]=" ";  //the previous coordinates of the block are set to empty.
-blockCoord[j]=new Coordinate;
-blockCoord[j]->setCoord(newX, y);
-}
-break;
-}
-}
-
-else if(returnRows[i]==2)  //completely filled.
-{
-cout<<"Row "<<i<<" is completely filled."<<endl;
-}
-
-
-/*******************************************************************************************/
-else {  //completely empty(0).
-history *h=new history();
-vector<Coordinate*> v=h->accessGrid();
-cout<<"Row "<<i<<" is completely empty."<<endl;
-int maxRow=0;
-
-//this determines the lowest row of the block.
-for(int i=0;i<4;i++)
-{
-Coordinate *c=blockCoord[i];
-int x=c->getX(c);
-if(x>maxRow){
-maxRow=x;
-}}
-int delta=i-maxRow;  //delta is what is added to the x-coord to get the new coord of the block
-cout<<"Delta: "<<delta<<endl;
-
-cout<<"Previous coord: "<<endl;
-//set the new coordinates.
-for(int j=0;j<4;j++){
-Coordinate *c=blockCoord[j];
-int x=c->getX(c);
-int newX=x+delta;
-int y=c->getY(c);  //y-coord stays the same.
-cout<<j<<": "<<x<<", "<<y<<endl;
-board[x][y]=" ";  //the previous coordinates of the block are set to empty.
-blockCoord[j]=new Coordinate;
-blockCoord[j]->setCoord(newX, y);
-v.push_back(blockCoord[j]);
-cout<<"size: "<<v.size()<<endl;
-}
-cout<<"Drop has been executed. Here's the vector of coordinates: "<<v.size()<<endl;
-// for(int i=0;i<4;i++){
-// 	Coordinate *c=v[i];
-// 	int x=c->getX(c);
-// 	int y=c->getY(c);
-// 	cout<<"x, y: "<<x<<", "<<y<<endl;
-// }
-ongrid.push_back(h);
-cout<<"Drop has been executed. size of array in grid.h"<<ongrid.size()<<endl;
-break;
-}
-}
 }
 
 void block::left(string** board){

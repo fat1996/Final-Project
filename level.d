@@ -1,1 +1,1 @@
-level.o: level.cc level.h block.h coordinate.h
+level.o: level.cc level.h block.h coordinate.h history.h
