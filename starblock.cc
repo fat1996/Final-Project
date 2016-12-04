@@ -48,7 +48,7 @@ if(board[newX][y]==" "){
 if(count==1){}
 else { 
 //cout<<"this is where count!=4: "<<i<<endl;
-Coordinate c;
+Coordinate *c=blockCoord[0];
 int x=c->getX(c);
 int y=c->getY(c);
 int newX=x+delta-1;
@@ -61,7 +61,7 @@ break;
 }
 
 if(i==bottomRow-maxRow){
-Coordinate *c=Position;
+Coordinate *c=blockCoord[0];
 int x=c->getX(c);
 int y=c->getY(c);
 int newX=x+bottomRow-maxRow;
