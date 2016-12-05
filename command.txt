@@ -2,8 +2,8 @@
 drop
 drop
 4left
-9right
-10ri
+9ri
+10right
 drop
 down
 down

@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cstdlib>
 #include "block.h"
 #include "grid.h"
@@ -20,15 +21,18 @@ bool textOnly = false;
 int level = 0;
 int repeat = 1;
 unsigned int seed = time(NULL);
+
 bool randomSeq = true; // random feature for level 3 + 4
 vector<string> norandomBlocks;
 int norandomPos = 0;
+
 vector<string> commandSeq;
 int commandSeqPos = 0;
 bool commandSet = false; // sequence feature
+
 int movesWithoutClearingRow = 0;
-int hs=0;  //highscore.
-int &highScore=hs;
+int hs = 0;  //highscore.
+int &highScore = hs;
 bool gameOver = false;
 
 
@@ -44,6 +48,9 @@ void createCommandMap() {
 	commandMap["counterclockwise"] = "counterclockwise";
 	commandMap["drop"] = "drop";
 	commandMap["levelup"] = "levelup";
+	commandMap["norandom"] = "norandom";
+	commandMap["random"] = "random";
+	commandMap["sequence"] = "sequence";
 	commandMap["leveldown"] = "leveldown";
 	commandMap["restart"] = "restart";
 }
@@ -54,41 +61,42 @@ int executeCommandLine(int argc, char *argv[]) {
 	if (argc == 1) {
 		return 0;
 	}
-	for (int i = 1; i < argc; i++) {
+	int i = 1;
+	while (i < argc) {
 		string option = argv[i];
 		if (option == "-text") {
-			++i;
 			textOnly = true;
+			++i;
 		} else if (option == "-scriptfile") {
 			++i;
 			string tmpScriptfile = argv[i];
 			ifstream filestream{tmpScriptfile};
 			if (!filestream.good()) {
-				cout << "File does not exist!" << endl;
+				cerr << "File does not exist!" << endl;
 				return 1;
 			}
-			++i;
 			scriptfile = tmpScriptfile;
+			++i;
 		} else if (option == "-seed") {
 			++i;
 			int tmpSeed = atoi(argv[i]);
 			if (tmpSeed < 0) {
-				cout << "Invalid seed value." << endl;
+				cerr << "Invalid seed value." << endl;
 				return 1;;
 			}
-			++i;
 			seed = tmpSeed;
+			++i;
 		} else if (option == "-startlevel") {
 			++i;
 			int tmpLevel = atoi(argv[i]);
 			if (tmpLevel < 0 || tmpLevel > 4) {
-				cout << "Invalid starting level." << endl;
+				cerr << "Invalid starting level." << endl;
 				return 1;
 			}
-			++i;
 			level = tmpLevel;
+			++i;
 		} else {
-			cout << "Invalid command line arguments" << endl;
+			cerr << "Invalid command line arguments" << endl;
 			return 1;
 		}
 	}
@@ -123,6 +131,7 @@ string determineCommand(string command) {
 		}
 	}
 	if (commandMatch == "" || matchCount > 1) {
+		// string entered matched more than one command or no command
 		return "invalid command"; 
 	} else {
 		return commandMatch;
@@ -152,20 +161,38 @@ block* generateNorandomBlock() {
 }
 
 int main(int argc, char *argv[]) {
+
+	// Initialize command map
 	createCommandMap();
+	// Run command line
 	int result = executeCommandLine(argc, argv);
 	if (result != 0) {
+		// If command line arguments fail
 		return 1;
 	}
 
 	srand(seed); // Random seed is set
+
+	// Initialize game
 	grid *g = new grid;
-	g->SetBoard(level, scriptfile, gameOver);
-	g->DrawBoard(level, highScore);
+	g->SetBoard(level, scriptfile, gameOver, textOnly);
+	g->DrawBoard(level, highScore, textOnly);
 
 	string command;
-	while (cin >> command) {
+	while (commandSet == true || cin >> command) {
+		if (commandSet) {
+			int size = commandSeq.size();
+			if (commandSeqPos + 1 == size) {
+				command = commandSeq[commandSeqPos];
+				commandSeq.clear();
+				commandSet = false;
+			} else {
+				command = commandSeq[commandSeqPos];
+				++commandSeqPos;
+			}
+		}
 		if (command == "rename") {
+			// Rename oldcommand to newcommand
 			string oldName;
 			string newName;
 			cin >> oldName;
@@ -175,13 +202,14 @@ int main(int argc, char *argv[]) {
 					string tmpCommand = it.second;
 					commandMap.erase(oldName); // erases oldName + val from map
 					commandMap[newName] = tmpCommand; // adds newName to map
-					cout << oldName << " renamed to " << newName << endl;
+					cout << oldName << " has been renamed to " << newName << endl;
 				}
 			}
 		} else {
-			command = setRepeat(command);
+			command = setRepeat(command); // Determine repeat count
 			command = determineCommand(command);
 			while (repeat != 0 && !gameOver) {
+				// While repeat > 0 or game is not over
 				--repeat;
 				if (command == "left") {
 					g->getCurrentBlock()->left(g->returnBoard());
@@ -204,56 +232,46 @@ int main(int argc, char *argv[]) {
 					int d=0;
 					int &counter=c;
 					int &count=d;
-					//cout << "Game over bool is: " << gameOver << endl;
 					if (gameOver) {
-						cout << "game over" << endl;
+						cout << "GAME OVER" << endl;
 						delete g;
 						return 0;
 					} else {
-					g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v, level, gameOver); 
-					g->getCurrentBlock()->updateBoard(g->returnBoard());
-					bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), 
-						     g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()),
-					             v, counter, g->returnCurScore(), highScore, level, count);		
-					             g->getCurrentBlock()->updateBoard(g->returnBoard());
-				//	cout << "Game over bool is: " << gameOver << endl;
-					if (gameOver) {
-						cout << "game over" << endl;
-						delete g;
-						return 0;
-					}
-					if (level == 4 && !cleared) {
-						++movesWithoutClearingRow;
-						if (movesWithoutClearingRow == 5) {
-							// drop starblock
-							StarBlock* star = new StarBlock;
-							star->initialize(g->returnBoard(), level, gameOver);
-							star->drop(g->returnRows(), g->returnBoard(), v, level, gameOver);
-							star->updateBoard(g->returnBoard());
-							movesWithoutClearingRow = 0;
-						}
-					}
-			 		if (randomSeq == true) {
-						
-					//	block *b = 
-						g->getNextBlock(gameOver);
-						
-					/*	if(b == nullptr) {
-							cout<<"GAME OVER"<<endl;
-							g->cleanUp();
+						g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v, level, gameOver); 
+						g->getCurrentBlock()->updateBoard(g->returnBoard());
+						// Cleared determines if a row has been cleared
+						bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), 
+							     g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()),
+						             v, counter, g->returnCurScore(), highScore, level, count);		
+					        	     g->getCurrentBlock()->updateBoard(g->returnBoard());
+						if (gameOver) {
+							cout << "GAME OVER" << endl;
+							delete g;
 							return 0;
-						 } else {
-							 delete b;
-						 }
-					*/	
-					} else {
-						g->setCurrentBlock(g->returnNextBlock(), gameOver);
-						g->setNextBlock(generateNorandomBlock());
-					}
+						}
+						if (level == 4 && !cleared) {
+							++movesWithoutClearingRow;
+							if (movesWithoutClearingRow == 5) {
+								// drop starblock
+								StarBlock* star = new StarBlock;
+								star->initialize(g->returnBoard(), level, gameOver);
+								star->drop(g->returnRows(), g->returnBoard(), v, level, gameOver);
+								star->updateBoard(g->returnBoard());
+								movesWithoutClearingRow = 0;
+							}
+						}
+			 			if (randomSeq == true) {
+							// Blocks are being generated randomly
+							g->getNextBlock(gameOver);
+						} else {
+							// Blocks are being generated using sequence file
+							g->setCurrentBlock(g->returnNextBlock(), gameOver);
+							g->setNextBlock(generateNorandomBlock());
+						}
 					}
 				} else if (command == "levelup") { 
 					if (level == 4) {
-					cout << "You are at the highest level" << endl;
+						cerr << "Cannot levelup. You are at the highest level." << endl;
 					}
 					else {
 						g->levelUp();
@@ -261,13 +279,52 @@ int main(int argc, char *argv[]) {
 					}
 				} else if (command == "leveldown") {
 					if (level == 0) {
-						cout << "You are at the lowest level" << endl;
+						cerr << "Cannot leveldown. You are at the lowest level." << endl;
 					}
 					else {
 						g->levelDown(scriptfile);
 						level--;
 					}
-				} 
+				} else if (command == "norandom") {
+					if (level < 3) {
+						cerr << "This feature is only valid in level 3 and 4" << endl;
+						cin >> command;
+						cin.clear();
+					} else {
+						string filename;
+						cin >> filename;
+						ifstream readfile {filename};
+						string block;
+						while (readfile >> block) {
+							norandomBlocks.push_back(block);
+						}
+						randomSeq = false;
+						delete g->returnNextBlock();
+						g->setNextBlock(generateNorandomBlock());
+					}
+				} else if (command == "random") {
+					if (level < 3) {
+						cerr << "This feature is only valid in level 3 and 4" << endl;
+					} else {
+						norandomBlocks.clear();
+						randomSeq = true;
+						norandomPos = 0;
+					}
+				} else if (command == "sequence") {
+					string filename;
+					cin >> filename;
+					ifstream readfile {filename};
+					string setCommand;
+					if (!readfile.good()) {
+						cerr << filename << " does not exist!" << endl;
+						break;
+					}
+					while (readfile >> setCommand) {
+						commandSeq.push_back(setCommand);
+					}
+					commandSet = true;
+					commandSeqPos = 0;
+				}
 				/*  else if (command == "I") {
 					// Destroy current block, and replace with I block, includes rotationState
 				} else if (command == "J") {
@@ -284,29 +341,31 @@ int main(int argc, char *argv[]) {
 					// Destroy current block, and replace with Z block, includes rotationState
 				} */
 				else if (command == "restart") {
-					// restarts on same level
+					// restarts on same level: current and next block remain the same
 					delete g;
 					grid *g = new grid;
 					gameOver = false;
-					g->SetBoard(level, scriptfile, gameOver);
-					cout<<"curscore: "<<g->returnCurScore()<<", highscore: "<<highScore<<endl;
+					g->SetBoard(level, scriptfile, gameOver, textOnly);
 				} 
 				else {
-					cout << "Invalid command! Please enter a valid command." << endl;
+					// Invalid command
+					cerr << "Invalid command! Please enter a valid command." << endl;
 					break;
 				}
 			}
 			if (gameOver) { 
-				cout << "game over" << endl;
+				cout << "GAME OVER" << endl;
 				delete g;
 				return 0;
-				}
-			// TODO: Case draws board even if the command is invalid.
-			if (command == "down" || command == "left" || command == "right" || command == "clockwise" || command == "counterclockwise") {
-			g->getCurrentBlock()->Heavy(g->returnBoard());
-			g->getCurrentBlock()->updateBoard(g->returnBoard());
 			}
-			g->DrawBoard(level, highScore);
+			if (command == "down" || command == "left" || command == "right" || 
+				command == "clockwise" || command == "counterclockwise") {
+				// Command causes downward move if block is heavy
+				g->getCurrentBlock()->Heavy(g->returnBoard());
+				g->getCurrentBlock()->updateBoard(g->returnBoard());
+			}
+			// Redraw board
+			g->DrawBoard(level, highScore, textOnly);
 			// reset repeat
 			repeat = 1;
 		}
