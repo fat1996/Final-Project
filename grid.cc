@@ -12,25 +12,7 @@
 
 using namespace std;
 
-void grid::cleanUp() {
-	int size = GridList.size();
-	int z = 0;
-        while(z < size) {
-                history *h=GridList[z];
- 	        delete h;
-		GridList.erase(GridList.begin()+z);
-		size = GridList.size();
-	}
-	for(int i=0;i<boardheight;i++) {
-		delete [] board[i];
-	}
-	delete [] board;
-	delete level;
-	delete currentBlock;
-	delete nextBlock;
-}
-
-	
+// Destructor	
 grid::~grid(){
 	int size = GridList.size();
 	int z = 0;
@@ -51,31 +33,30 @@ grid::~grid(){
 	delete nextBlock;
 }
 
+// Return rows
 map<int, int> grid::returnRows(){
 	return emptyRows;
 }
 
+// Return board
 string** grid::returnBoard(){
 	return board;
 }
 
+// Return grid list
 vector<history*> &grid::returnGridList(){
 	return GridList;
 }
 
-// bool &grid::returnGameOver(){
-//	return gameOver;
-// }
-
+// Returns current score
 int &grid::returnCurScore(){
 	return currentScore;
 }
 
-
-void grid::SetBoard(int level_num, string scriptfile, bool& gameOver) {   //this sets up the initial configuration of the board.
-//	gameOver=false;
+// Sets up initial configuration of board
+void grid::SetBoard(int level_num, string scriptfile, bool& gameOver) {
 	currentScore=0;
-	
+	// Initialize board
 	board = new string*[boardheight];
 	for(int i=0; i<boardheight ; i++) {
 		board[i] = new string[boardwidth];
@@ -85,6 +66,7 @@ void grid::SetBoard(int level_num, string scriptfile, bool& gameOver) {   //this
 	int rowIndex = i;
 	emptyRows[rowIndex]=0; //0 means empty. The entire row is empty.	
 	}
+	// Create level
 	if (level_num == 0) {
 		level = new Level0(scriptfile);
 	} else if (level_num == 1) {
@@ -99,6 +81,7 @@ void grid::SetBoard(int level_num, string scriptfile, bool& gameOver) {   //this
 	nextBlock = level->getNextBlock();
 }
 
+// Draws next block
 void grid::drawNextBlock() {
 	char type = nextBlock->getType();
 	cout << "\nNext:" << endl;
@@ -120,6 +103,7 @@ void grid::drawNextBlock() {
 	cout << "\n" << endl;
 }
 
+// Draws board in text
 void grid::DrawBoard(int l, int hiScore) {
 	cout<<"Level:	"<<l<<endl;
 	cout<<"Score:	"<<currentScore<<endl;
@@ -135,36 +119,36 @@ void grid::DrawBoard(int l, int hiScore) {
 	drawNextBlock();
 }
 
+// Returns current block
 block* grid::getCurrentBlock() {
 	return this->currentBlock;
 }
 
+// Gets next block based on level
 block* grid::getNextBlock(bool &gameOver) {
 	this->currentBlock = this->nextBlock;
-	//bool gameOver = 
 	currentBlock->initialize(this->board, level->getLevel(), gameOver);
-/*	if(gameOver==false){  //gameover. stop.
-		cout << "Gameover print" << endl;
-		return nullptr;
-	}
-	else{ */
-		this->nextBlock = this->level->getNextBlock();
-		return this->nextBlock;
+	this->nextBlock = this->level->getNextBlock();
+	return this->nextBlock;
 }
 
+// Returns next block
 block* grid::returnNextBlock() {
 	return this->nextBlock;
 }
 
+// Sets current block: used for starblock
 void grid::setCurrentBlock(block* b, bool& gameOver) {
 	currentBlock = b;
 	currentBlock->initialize(this->board, level->getLevel(), gameOver);
 }
 
+// Sets next block: used for starblock
 void grid::setNextBlock(block* b) {
 	nextBlock = b;
 }
 
+// Deletes old level object and links new level object
 // Main already handles case where curLevel is 4
 void grid::levelUp() {
 	int curLevel = level->getLevel();
@@ -180,6 +164,7 @@ void grid::levelUp() {
 	}
 }
 
+// Deletes old level object and links new level object
 // Main already handles case where curLevel is 0
 void grid::levelDown(string scriptfile) {
 	int curLevel = level->getLevel();

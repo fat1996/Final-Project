@@ -21,13 +21,11 @@ public:
 	void SetBoard(int level_num, std::string scriptfile, bool& gameOver);   //this sets up the initial configuration of the board.
 	void DrawBoard(int l, int hiScore);
 	void drawNextBlock();
-//	bool &returnGameOver();
 	int &returnCurScore();
 	std::vector<history*> &returnGridList();  //returns the private member GridList.
 	std::string** returnBoard();  //returns the private member, board.
 	std::map<int, int> returnRows();  //returns the private member, emptyRows.
 	~grid(); //destructor.
-	void cleanUp();
 	block* getCurrentBlock();
 	block* getNextBlock(bool &gameOver);
 	block* returnNextBlock();
