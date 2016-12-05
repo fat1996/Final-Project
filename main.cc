@@ -170,8 +170,8 @@ int main(int argc, char *argv[]) {
 
 	// Initialize game
 	grid *g = new grid;
-	g->SetBoard(level, scriptfile, gameOver);
-	g->DrawBoard(level, highScore);
+	g->SetBoard(level, scriptfile, gameOver, textOnly);
+	g->DrawBoard(level, highScore, textOnly);
 
 	string command;
 	while (cin >> command) {
@@ -290,7 +290,7 @@ int main(int argc, char *argv[]) {
 					delete g;
 					grid *g = new grid;
 					gameOver = false;
-					g->SetBoard(level, scriptfile, gameOver);
+					g->SetBoard(level, scriptfile, gameOver, textOnly);
 				} 
 				else {
 					// Invalid command
@@ -310,7 +310,7 @@ int main(int argc, char *argv[]) {
 				g->getCurrentBlock()->updateBoard(g->returnBoard());
 			}
 			// Redraw board
-			g->DrawBoard(level, highScore);
+			g->DrawBoard(level, highScore, textOnly);
 			// reset repeat
 			repeat = 1;
 		}

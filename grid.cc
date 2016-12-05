@@ -9,6 +9,7 @@
 #include "level2.h"
 #include "level3.h"
 #include "level4.h"
+#include "window.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ grid::~grid(){
 	currentBlock->deleteBlock();
 	delete currentBlock;
 	delete nextBlock;
+	delete w;
 }
 
 // Return rows
@@ -54,7 +56,10 @@ int &grid::returnCurScore(){
 }
 
 // Sets up initial configuration of board
-void grid::SetBoard(int level_num, string scriptfile, bool& gameOver) {
+void grid::SetBoard(int level_num, string scriptfile, bool& gameOver, bool textOnly) {
+	if (!textOnly) {
+		w = new Xwindow(400, 600);
+	}
 	currentScore=0;
 	// Initialize board
 	board = new string*[boardheight];
@@ -104,7 +109,7 @@ void grid::drawNextBlock() {
 }
 
 // Draws board in text
-void grid::DrawBoard(int l, int hiScore) {
+void grid::DrawBoard(int l, int hiScore, bool textOnly) {
 	cout<<"Level:	"<<l<<endl;
 	cout<<"Score:	"<<currentScore<<endl;
 	cout<<"Hi Score:"<<hiScore<<endl;
@@ -117,6 +122,53 @@ void grid::DrawBoard(int l, int hiScore) {
 	}
 	cout<<"---------------"<<endl;
 	drawNextBlock();
+
+	if (!textOnly) {
+		// Graphical display
+		w->fillRectangle(0, 0, 400, 600, Xwindow::Black);
+
+		int highScore = hiScore;
+		int topleft_x = 30;
+		int topleft_y = 120;
+		int boardSize = 20;
+		int cellWidth = 3;
+
+		string levelText = to_string(level->getLevel());
+		string curScoreText = to_string(currentScore);
+		string highScoreText = to_string(highScore);
+
+		w->drawBigString(topleft_x, 40, "              QUADRIS", Xwindow::White);
+		w->drawString(topleft_x, 60, "Level: "+ levelText, Xwindow::White);
+		w->drawString(topleft_x, 80, "Current Score: " + curScoreText, Xwindow::White);
+		w->drawString(topleft_x, 100, "High Score: " + highScoreText, Xwindow::White);
+
+		for (int i = 0; i < boardheight; i++) {
+			for (int j = 0; j < boardwidth; j++) {
+				string cell = board[i][j];
+				if (cell == "T") {
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Red);
+				} else if (cell == "L") {
+                			w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Blue);
+				} else if (cell == "J") {
+						w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Yellow);
+				} else if (cell == "S") {
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Green);
+				} else if (cell == "Z") {
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Orange);
+				} else if (cell == "I") {
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Cyan);
+				} else if (cell == "O") {
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Magenta);
+				} else if (cell == "*") {
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize +     cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Brown);
+				} else {
+					// Empty cell
+					w->fillRectangle(topleft_x + j*(boardSize+ cellWidth) + cellWidth, topleft_y + i*(boardSize + cellWidth) + cellWidth, boardSize, boardSize, Xwindow::Black);
+				}
+			}
+		}
+		w->drawString(30, 570, "Created by Simran Kaur and Fatima Taj in Fall 2016", Xwindow::Magenta);
+	}
 }
 
 // Returns current block

@@ -4,6 +4,7 @@
 #include <vector>
 #include "level.h"
 #include "block.h"
+#include "window.h"
 
 const int boardheight=18;
 const int boardwidth=11;
@@ -16,10 +17,12 @@ class grid {
 	std::map<int, int> emptyRows;
 	std::vector<history*> GridList;
 	int currentScore;
+	Xwindow* w;
 
 public:
-	void SetBoard(int level_num, std::string scriptfile, bool& gameOver);   //this sets up the initial configuration of the board.
-	void DrawBoard(int l, int hiScore);
+	void SetBoard(int level_num, std::string scriptfile, bool& gameOver, bool textOnly);
+	//this sets up the initial configuration of the board.
+	void DrawBoard(int l, int hiScore, bool textOnly);
 	void drawNextBlock();
 	int &returnCurScore();
 	std::vector<history*> &returnGridList();  //returns the private member GridList.
