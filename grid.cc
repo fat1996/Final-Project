@@ -110,9 +110,9 @@ void grid::drawNextBlock() {
 
 // Draws board in text
 void grid::DrawBoard(int l, int hiScore, bool textOnly) {
-	cout<<"Level:	"<<l<<endl;
-	cout<<"Score:	"<<currentScore<<endl;
-	cout<<"Hi Score:"<<hiScore<<endl;
+	cout<<"\nLevel:	  "<<l<<endl;
+	cout<<"Score:	  "<<currentScore<<endl;
+	cout<<"Hi Score: "<<hiScore<<endl;
 	cout<<"---------------"<<endl;
 	for (int i=0 ; i<boardheight ;i++) {
 		for (int j=0; j<boardwidth; j++){
