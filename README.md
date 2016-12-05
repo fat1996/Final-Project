@@ -1,7 +1,7 @@
 # QUADRIS
 Final project for CS246 Fall 2016 by Simran Kaur and Fatima Taj
 
-Build game by typing 'make;
+Build game by typing 'make'
 
 Command Line Options:
 - scriptfile file: generates block based on file
