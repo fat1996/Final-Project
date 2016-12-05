@@ -1,5 +1,5 @@
 # QUADRIS
-Final project for CS246 Fall 2016 by Simran Kaur and Fatime Taj
+Final project for CS246 Fall 2016 by Simran Kaur and Fatima Taj
 
 Build game by typing 'make;
 
