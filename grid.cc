@@ -12,7 +12,35 @@
 
 using namespace std;
 
+void grid::cleanUp() {
+	int size = GridList.size();
+	int z = 0;
+        while(z < size) {
+                history *h=GridList[z];
+ 	        delete h;
+		GridList.erase(GridList.begin()+z);
+		size = GridList.size();
+	}
+	for(int i=0;i<boardheight;i++) {
+		delete [] board[i];
+	}
+	delete [] board;
+	delete level;
+	delete currentBlock;
+	delete nextBlock;
+}
+
+	
 grid::~grid(){
+	int size = GridList.size();
+	int z = 0;
+	while(z < size) {
+		history *h=GridList[z];
+	        delete h;
+	        GridList.erase(GridList.begin()+z);
+		size = GridList.size();
+	}
+
 	for(int i=0;i<boardheight;i++) {
 		delete [] board[i];
 	}
@@ -35,17 +63,17 @@ vector<history*> &grid::returnGridList(){
 	return GridList;
 }
 
-bool &grid::returnGameOver(){
-	return gameOver;
-}
+// bool &grid::returnGameOver(){
+//	return gameOver;
+// }
 
 int &grid::returnCurScore(){
 	return currentScore;
 }
 
 
-void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the initial configuration of the board.
-	gameOver=false;
+void grid::SetBoard(int level_num, string scriptfile, bool& gameOver) {   //this sets up the initial configuration of the board.
+//	gameOver=false;
 	currentScore=0;
 	
 	board = new string*[boardheight];
@@ -67,7 +95,7 @@ void grid::SetBoard(int level_num, string scriptfile) {   //this sets up the ini
 		level = new Level3();
 	}
 	currentBlock = level->getNextBlock();
-	currentBlock->initialize(this->board, level_num);
+	currentBlock->initialize(this->board, level_num, gameOver);
 	nextBlock = level->getNextBlock();
 }
 
@@ -111,27 +139,26 @@ block* grid::getCurrentBlock() {
 	return this->currentBlock;
 }
 
-block* grid::getNextBlock() {
+block* grid::getNextBlock(bool &gameOver) {
 	this->currentBlock = this->nextBlock;
-	gameOver=currentBlock->initialize(this->board, level->getLevel());
-	if(gameOver==false){  //gameover. stop.
+	//bool gameOver = 
+	currentBlock->initialize(this->board, level->getLevel(), gameOver);
+/*	if(gameOver==false){  //gameover. stop.
+		cout << "Gameover print" << endl;
 		return nullptr;
 	}
-	else{
+	else{ */
 		this->nextBlock = this->level->getNextBlock();
 		return this->nextBlock;
-	}
-	
 }
 
 block* grid::returnNextBlock() {
 	return this->nextBlock;
 }
 
-bool grid::setCurrentBlock(block* b) {
+void grid::setCurrentBlock(block* b, bool& gameOver) {
 	currentBlock = b;
-	gameOver=currentBlock->initialize(this->board, level->getLevel());
-	return gameOver;
+	currentBlock->initialize(this->board, level->getLevel(), gameOver);
 }
 
 void grid::setNextBlock(block* b) {

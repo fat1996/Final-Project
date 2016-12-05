@@ -17,7 +17,7 @@ board[x][y]="O";
 }
 }
 
-bool oblock::initialize(string** board, int level_num){
+void oblock::initialize(string** board, int level_num, bool &gameOver){
 state=1;
 level=level_num;
 //set isHeavy.
@@ -32,9 +32,9 @@ carriedOver=new Coordinate;
 carriedOver->setCoord(3, 0);
 
 if(board[3][0]!=" " || board[3][1]!=" " || board[4][0]!=" " || board[4][1]!=" "){
-	return false; //cout<<"GAME OVER!!!!!"<<endl;
+	gameOver=true; //cout<<"GAME OVER!!!!!"<<endl;
 }
-else {
+else { 
 	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 
@@ -54,7 +54,7 @@ int y=c->getY(c);
 //cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="O";
 }
-return true;
+// return true;
 }
 }
 

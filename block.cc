@@ -6,7 +6,10 @@
 
 using namespace std;
 
-void block::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid, int level) {
+void block::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid, int level, bool &gameOver) {
+//if (board[3][0] != " " || board[4][0] != " ") {
+//	cout << "END OF DROP BOARD FULL" << endl;
+		    //    gameOver = true;
 returnRows=updateRows(returnRows, board);
 history *h=new history();
 vector<Coordinate*> v=h->accessGrid();
@@ -47,6 +50,7 @@ int newX=x+delta-1;
 board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 blockCoord[j]=new Coordinate;
 blockCoord[j]->setCoord(newX, y);
+// cout << "NEW COORDINATES ARE: " << newX << "AND" << y << endl;
 v.push_back(blockCoord[j]);
 }
 break;
@@ -62,6 +66,7 @@ board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 blockCoord[j]=new Coordinate;
 blockCoord[j]->setCoord(newX, y);
 v.push_back(blockCoord[j]);
+// cout << "NEW COORDINATES ARE: " << newX << "AND" << y << endl;
 }
 	break;
 }
@@ -70,6 +75,10 @@ v.push_back(blockCoord[j]);
 h->accessGrid()=v;
 h->getLevel()=level;
 ongrid.push_back(h);
+//if (board[3][0] != " " || board[4][0] != " ") {
+//	cout << "END OF DROP BOARD FULL" << endl;
+//	gameOver = true;
+//}
 }
 
 // Constructor 
@@ -380,6 +389,3 @@ x=x+1;
 carriedOver->setCoord(x, y);
 }}
 }
-
-
-

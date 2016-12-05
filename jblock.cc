@@ -167,7 +167,7 @@ board[x][y]="J";
 }
 }
 
-bool jblock::initialize(string** board, int level_num){
+void jblock::initialize(string** board, int level_num, bool &gameOver){
 state=1;
 level=level_num;
 //cout<<"LEVEL OF BLOCK: "<<level<<endl;
@@ -183,9 +183,10 @@ carriedOver=new Coordinate;
 carriedOver->setCoord(3, 0);
 
 if(board[3][0]!=" " || board[4][0]!=" " || board[4][1]!=" " || board[4][2]!=" "){
-	return false; //cout<<"GAME OVER!!!!!"<<endl;
+	gameOver = true; //cout<<"GAME OVER!!!!!"<<endl;
 }
 else {
+	
 	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 
@@ -205,6 +206,6 @@ int y=c->getY(c);
 //cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="J";
 }
-return true;
+// return true;
 }
 }

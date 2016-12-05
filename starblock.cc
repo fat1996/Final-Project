@@ -13,10 +13,10 @@ using namespace std;
 StarBlock::StarBlock() : block{'*'} {}
 
 // Initializer
-bool StarBlock::initialize(string** board, int level_num) {
+void StarBlock::initialize(string** board, int level_num, bool &gameOver) {
 	level = level_num;
 	if(board[3][6]!=" "){  //game over.
-		return false;
+		gameOver = true;
 	}
 	else{
 		blockCoord[0]=new Coordinate;
@@ -31,7 +31,7 @@ bool StarBlock::initialize(string** board, int level_num) {
 
 	blockCoord[3]=new Coordinate;
 	blockCoord[3]->setCoord(0, 0);
-	return true;
+//	return true;
 	}
 }
 
@@ -53,7 +53,7 @@ void StarBlock::updateBoard(std::string** board) {
 	board[x][y] = "*";
 }
 
-void StarBlock::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid, int level){
+void StarBlock::drop(map<int, int> returnRows, string** board, vector<history*> &ongrid, int level, bool &gameOver) {
 	returnRows=updateRows(returnRows, board);
 	history *h=new history();
 	vector<Coordinate*> v=h->accessGrid();

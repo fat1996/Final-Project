@@ -97,7 +97,7 @@ board[x][y]="Z";
 }
 }
 
-bool zblock::initialize(string** board, int level_num){
+void zblock::initialize(string** board, int level_num, bool &gameOver){
 state=1;
 level=level_num;
 //set isHeavy.
@@ -112,9 +112,9 @@ carriedOver=new Coordinate;
 carriedOver->setCoord(3, 0);
 
 if(board[3][0]!=" " || board[3][1]!=" " || board[4][1]!=" " || board[4][2]!=" "){
-	return false;
+	gameOver=true;
 }
-else {
+else { 
 	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 
@@ -134,9 +134,8 @@ int y=c->getY(c);
 //cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="Z";
 }
-return true;
+// return true;
 }
 }
-
 
 

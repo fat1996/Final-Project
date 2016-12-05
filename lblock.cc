@@ -165,7 +165,7 @@ board[x][y]="L";
 }
 }
 
-bool lblock::initialize(string** board, int level_num){
+void lblock::initialize(string** board, int level_num, bool &gameOver){
 
 state=1;
 level=level_num;
@@ -181,10 +181,10 @@ else {
 carriedOver=new Coordinate;
 carriedOver->setCoord(0, 0);
 
-if(board[3][2]!=" " || board[4][0]!=" " || board[4][1]!=" " || board[4][2]!=" "){
-	return false; //cout<<"GAME OVER!!!!!"<<endl;
+if(board[3][2]!=" " || board[4][0]!=" " || board[4][1]!=" " || board[4][2]!=" ") {
+	gameOver = true;
 }
-else {
+else  { 
 	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 2);
 
@@ -204,6 +204,6 @@ int y=c->getY(c);
 //cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="L";
 }
-return true;
+//return true;
 }
 }

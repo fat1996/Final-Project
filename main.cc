@@ -29,6 +29,7 @@ bool commandSet = false; // sequence feature
 int movesWithoutClearingRow = 0;
 int hs=0;  //highscore.
 int &highScore=hs;
+bool gameOver = false;
 
 
 // map to keep track of name of command
@@ -159,7 +160,7 @@ int main(int argc, char *argv[]) {
 
 	srand(seed); // Random seed is set
 	grid *g = new grid;
-	g->SetBoard(level, scriptfile);
+	g->SetBoard(level, scriptfile, gameOver);
 	g->DrawBoard(level, highScore);
 
 	string command;
@@ -180,7 +181,7 @@ int main(int argc, char *argv[]) {
 		} else {
 			command = setRepeat(command);
 			command = determineCommand(command);
-			while (repeat != 0) {
+			while (repeat != 0 && !gameOver) {
 				--repeat;
 				if (command == "left") {
 					g->getCurrentBlock()->left(g->returnBoard());
@@ -203,35 +204,52 @@ int main(int argc, char *argv[]) {
 					int d=0;
 					int &counter=c;
 					int &count=d;
-					g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v, level);
+					//cout << "Game over bool is: " << gameOver << endl;
+					if (gameOver) {
+						cout << "game over" << endl;
+						delete g;
+						return 0;
+					} else {
+					g->getCurrentBlock()->drop(g->returnRows(), g->returnBoard(), v, level, gameOver); 
 					g->getCurrentBlock()->updateBoard(g->returnBoard());
 					bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), 
 						     g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()),
 					             v, counter, g->returnCurScore(), highScore, level, count);		
-					             g->getCurrentBlock()->updateBoard(g->returnBoard());	
+					             g->getCurrentBlock()->updateBoard(g->returnBoard());
+				//	cout << "Game over bool is: " << gameOver << endl;
+					if (gameOver) {
+						cout << "game over" << endl;
+						delete g;
+						return 0;
+					}
 					if (level == 4 && !cleared) {
 						++movesWithoutClearingRow;
 						if (movesWithoutClearingRow == 5) {
 							// drop starblock
 							StarBlock* star = new StarBlock;
-							star->initialize(g->returnBoard(), level);
-							star->drop(g->returnRows(), g->returnBoard(), v, level);
+							star->initialize(g->returnBoard(), level, gameOver);
+							star->drop(g->returnRows(), g->returnBoard(), v, level, gameOver);
 							star->updateBoard(g->returnBoard());
 							movesWithoutClearingRow = 0;
 						}
 					}
 			 		if (randomSeq == true) {
 						
-						block *b=g->getNextBlock();
-						if(b==nullptr){
+					//	block *b = 
+						g->getNextBlock(gameOver);
+						
+					/*	if(b == nullptr) {
 							cout<<"GAME OVER"<<endl;
-						}
+							g->cleanUp();
+							return 0;
+						 } else {
+							 delete b;
+						 }
+					*/	
 					} else {
-						bool b=g->setCurrentBlock(g->returnNextBlock());
-						if(b==false){
-							cout<<"GAME OVER"<<endl;
-						}
+						g->setCurrentBlock(g->returnNextBlock(), gameOver);
 						g->setNextBlock(generateNorandomBlock());
+					}
 					}
 				} else if (command == "levelup") { 
 					if (level == 4) {
@@ -269,7 +287,8 @@ int main(int argc, char *argv[]) {
 					// restarts on same level
 					delete g;
 					grid *g = new grid;
-					g->SetBoard(level, scriptfile);
+					gameOver = false;
+					g->SetBoard(level, scriptfile, gameOver);
 					cout<<"curscore: "<<g->returnCurScore()<<", highscore: "<<highScore<<endl;
 				} 
 				else {
@@ -277,6 +296,11 @@ int main(int argc, char *argv[]) {
 					break;
 				}
 			}
+			if (gameOver) { 
+				cout << "game over" << endl;
+				delete g;
+				return 0;
+				}
 			// TODO: Case draws board even if the command is invalid.
 			if (command == "down" || command == "left" || command == "right" || command == "clockwise" || command == "counterclockwise") {
 			g->getCurrentBlock()->Heavy(g->returnBoard());

@@ -13,11 +13,11 @@ class StarBlock : public block {
  public:
  	~StarBlock();
  	StarBlock();
-	bool initialize(std::string** board, int level_num);
+	void initialize(std::string** board, int level_num, bool &gameOver);
  	void updateBoard(std::string** board) override;
 	void clockwise(std::string** board) override;
 	void anticlockwise(std::string** board) override;
-	void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid, int level) override;
+	virtual void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid, int level, bool &gameOver) override;
 };
 
 #endif

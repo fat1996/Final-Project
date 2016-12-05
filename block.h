@@ -26,13 +26,12 @@ class block {
 	char getType();
 	virtual	~block();
 	virtual void deleteBlock();
-	virtual bool initialize(std::string** board, int level_num)=0;
+	virtual void initialize(std::string** board, int level_num, bool &gameOver)=0;
 	virtual void updateBoard(std::string** board)=0;
 	virtual void clockwise(std::string** board)=0;
 	virtual void anticlockwise(std::string** board)=0;
 	void printBlock();
-	virtual void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid, int level);  
-	std::map<int, int> updateRows(std::map<int, int> returnRows, std::string** board);	
+	virtual void drop(std::map<int, int> returnRows, std::string** board, std::vector<history*> &ongrid, int level, bool &gameOver);  	 std::map<int, int> updateRows(std::map<int, int> returnRows, std::string** board);	
 	void left(std::string** board);
 	void right(std::string **board);
 	void down(std::string **board);

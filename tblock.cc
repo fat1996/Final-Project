@@ -165,7 +165,7 @@ board[x][y]="T";
 }
 }
 
-bool tblock::initialize(string** board, int level_num){
+void tblock::initialize(string** board, int level_num, bool &gameOver){
 
 state=1;
 level=level_num;
@@ -181,9 +181,9 @@ carriedOver=new Coordinate;
 carriedOver->setCoord(3, 0);
 
 if(board[3][0]!=" " || board[3][1]!=" " || board[4][1]!=" " || board[3][2]!=" "){
-	return false;
+	gameOver=true;
 }
-else {
+else { 
 	blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 0);
 
@@ -203,7 +203,7 @@ int y=c->getY(c);
 //cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="T";
 }
-return true;
-}
+// return true;
 }
 
+}

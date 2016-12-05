@@ -97,7 +97,7 @@ board[x][y]="S";
 }
 }
 
-bool sblock::initialize(string** board, int level_num){
+void sblock::initialize(string** board, int level_num, bool &gameOver){
 
 state=1;
 level=level_num;
@@ -113,9 +113,9 @@ carriedOver=new Coordinate;
 carriedOver->setCoord(3, 1);
 
 if(board[3][1]!=" " || board[3][2]!=" " || board[4][1]!=" " || board[4][0]!=" "){
-	return false; //cout<<"GAME OVER!!!!!"<<endl;
+	gameOver=true; //cout<<"GAME OVER!!!!!"<<endl;
 }
-else {
+else { 
 blockCoord[0]=new Coordinate;
 blockCoord[0]->setCoord(3, 1);
 
@@ -135,7 +135,7 @@ int y=c->getY(c);
 //cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="S";
 }
-return true;
+// return true;
 }
 }
 
