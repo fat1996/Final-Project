@@ -8,10 +8,10 @@ using namespace std;
 lblock::lblock() : block{'L'} {}
 
 void lblock::clockwise(string** board){
-cout<<"Current state of block: "<<state<<endl;
+//cout<<"Current state of block: "<<state<<endl;
 
 if(state==1){
-cout<<"Current coordinates: "<<endl;
+//cout<<"Current coordinates: "<<endl;
 Coordinate *c=blockCoord[0];
 int x=c->getX(c);
 int y=c->getY(c);
@@ -24,7 +24,7 @@ x=x1;
 y=y1;
 }
 }
-cout<<"Carried over: "<<x<<", "<<y<<endl;
+//cout<<"Carried over: "<<x<<", "<<y<<endl;
 carriedOver->setCoord(x, y); 
 
 if((x-1)<topBorder || (x-2)<topBorder || (y+1)>(rightBorder-1)){}
@@ -53,7 +53,7 @@ state=2;
 else if(state==2){
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
-cout<<"x, y: "<<x<<", "<<y<<endl;
+//cout<<"x, y: "<<x<<", "<<y<<endl;
 if((y+1)>(rightBorder-1) || (y+2)>(rightBorder-1) || (x-1)<topBorder){}
 	else{
 		//you know what the new set of coordinates are going to be.
@@ -80,7 +80,7 @@ state=3;
 else if(state==3){
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
-cout<<"x, y: "<<x<<", "<<y<<endl;
+//cout<<"x, y: "<<x<<", "<<y<<endl;
 if((x-1)<topBorder || (x-2)<topBorder || (y+1)>(rightBorder-1)){}
 	else{
 		//you know what the new set of coordinates are going to be.
@@ -107,7 +107,7 @@ state=4;
 else if(state==4){
 int x=carriedOver->getX(carriedOver);
 int y=carriedOver->getY(carriedOver);
-cout<<"x, y: "<<x<<", "<<y<<endl;
+//cout<<"x, y: "<<x<<", "<<y<<endl;
 if((y+1)>(rightBorder-1) || (y+2)>(rightBorder-1) || (x-1)<topBorder){}
 	else{
 		//you know what the new set of coordinates are going to be.
@@ -160,16 +160,16 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="L";
 }
 }
 
-void lblock::initialize(string** board, int level_num){
+bool lblock::initialize(string** board, int level_num){
 
 state=1;
 level=level_num;
-cout<<"BLOCK GENERATED ON: "<<level<<endl;
+//cout<<"BLOCK GENERATED ON: "<<level<<endl;
 //set isHeavy.
 if(level_num<=2){
 	isHeavy=false;
@@ -181,8 +181,8 @@ else {
 carriedOver=new Coordinate;
 carriedOver->setCoord(0, 0);
 
-if(board[3][2]!=" " && board[4][0]!=" " && board[4][1]!=" " && board[4][2]!=" "){
-	cout<<"GAME OVER!!!!!"<<endl;
+if(board[3][2]!=" " || board[4][0]!=" " || board[4][1]!=" " || board[4][2]!=" "){
+	return false; //cout<<"GAME OVER!!!!!"<<endl;
 }
 else {
 	blockCoord[0]=new Coordinate;
@@ -201,8 +201,9 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="L";
 }
+return true;
 }
 }

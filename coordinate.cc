@@ -13,7 +13,7 @@ void Coordinate::getCoord(Coordinate *c){
 int x=c->xCoord;
 int y=c->yCoord;
 
-cout<<"The co-ordinates are: "<<x<<", "<<y<<endl;
+//cout<<"The co-ordinates are: "<<x<<", "<<y<<endl;
 }
 
 int Coordinate::getX(Coordinate *c){
@@ -23,3 +23,5 @@ return c->xCoord;
 int Coordinate::getY(Coordinate *c){
 return c->yCoord;
 }
+
+Coordinate::~Coordinate(){}

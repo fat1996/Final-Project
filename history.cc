@@ -6,10 +6,13 @@ vector<Coordinate*> &history::accessGrid(){
 	return onGrid;
 }
 
-int& history::getLevel(){
+int &history::getLevel(){
 	return level;
 }
 
 history::~history(){
-	delete this;
+	int size=onGrid.size();
+	for(int i=0 ; i<size; i++) {
+		delete onGrid[i];
+	}
 }

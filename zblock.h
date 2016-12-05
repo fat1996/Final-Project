@@ -6,7 +6,7 @@
 class zblock: public block{
 public:
 	zblock();
-	void initialize(std::string** board, int level_num) override;
+	bool initialize(std::string** board, int level_num) override;
 	void clockwise(std::string** board) override;
 	void anticlockwise(std::string** board) override;
 	void updateBoard(std::string** board) override;

@@ -8,10 +8,10 @@ using namespace std;
 sblock::sblock() : block{'S'} {}
 
 void sblock::clockwise(string** board){
-cout<<"Current state of block: "<<state<<endl;
+//cout<<"Current state of block: "<<state<<endl;
 
 if(state==1){
-cout<<"Current coordinates: "<<endl;
+//cout<<"Current coordinates: "<<endl;
 Coordinate *c=blockCoord[0];
 int x=c->getX(c);
 int y=c->getY(c);
@@ -24,7 +24,7 @@ x=x1;
 y=y1;
 }
 }
-cout<<"Carried over: "<<x<<", "<<y<<endl;
+//cout<<"Carried over: "<<x<<", "<<y<<endl;
 carriedOver->setCoord(x, y);  //lowest x, lowest y.
 
 if((x+1)>bottomRow || (x-1)<topBorder || (y-1)<leftBorder){}
@@ -92,12 +92,12 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="S";
 }
 }
 
-void sblock::initialize(string** board, int level_num){
+bool sblock::initialize(string** board, int level_num){
 
 state=1;
 level=level_num;
@@ -112,8 +112,8 @@ else {
 carriedOver=new Coordinate;
 carriedOver->setCoord(3, 1);
 
-if(board[3][1]!=" " && board[3][2]!=" " && board[4][1]!=" " && board[4][0]!=" "){
-	cout<<"GAME OVER!!!!!"<<endl;
+if(board[3][1]!=" " || board[3][2]!=" " || board[4][1]!=" " || board[4][0]!=" "){
+	return false; //cout<<"GAME OVER!!!!!"<<endl;
 }
 else {
 blockCoord[0]=new Coordinate;
@@ -132,9 +132,10 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="S";
 }
+return true;
 }
 }
 

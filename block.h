@@ -26,7 +26,7 @@ class block {
 	char getType();
 	virtual	~block();
 	virtual void deleteBlock();
-	virtual void initialize(std::string** board, int level_num)=0;
+	virtual bool initialize(std::string** board, int level_num)=0;
 	virtual void updateBoard(std::string** board)=0;
 	virtual void clockwise(std::string** board)=0;
 	virtual void anticlockwise(std::string** board)=0;
@@ -38,7 +38,7 @@ class block {
 	void down(std::string **board);
 	bool isPresent(int x, int y);	
 	void Heavy(std::string **board);  //checks the level on which the block was generated, and executes down accordingly.
-	bool updateScore(std::string **board, std::map<int, int> returnRows, std::vector<history*> ongrid, int &counter, 
+	bool updateScore(std::string **board, std::map<int, int> returnRows, std::vector<history*> &ongrid, int &counter, 
 					int &curScore, int &highScore, int curLevel, int &count);  //checks if any row has been completely filled. If yes, then shift grid downwards. update score accordingly.
 };
 #endif

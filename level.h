@@ -8,7 +8,7 @@ class Level {
 	int level;
  public:
  	Level(int level_num);
- 	int getLevel();
+ 	int getLevel();  //I've added this to get the level field.
 	virtual ~Level();
 	virtual block* getNextBlock() = 0;
 };

@@ -92,7 +92,10 @@ void grid::drawNextBlock() {
 	cout << "\n" << endl;
 }
 
-void grid::DrawBoard() {
+void grid::DrawBoard(int l, int hiScore) {
+	cout<<"Level:	"<<l<<endl;
+	cout<<"Score:	"<<currentScore<<endl;
+	cout<<"Hi Score:"<<hiScore<<endl;
 	cout<<"---------------"<<endl;
 	for (int i=0 ; i<boardheight ;i++) {
 		for (int j=0; j<boardwidth; j++){
@@ -110,18 +113,25 @@ block* grid::getCurrentBlock() {
 
 block* grid::getNextBlock() {
 	this->currentBlock = this->nextBlock;
-	currentBlock->initialize(this->board, level->getLevel());
-	this->nextBlock = this->level->getNextBlock();
-	return this->nextBlock;
+	gameOver=currentBlock->initialize(this->board, level->getLevel());
+	if(gameOver==false){  //gameover. stop.
+		return nullptr;
+	}
+	else{
+		this->nextBlock = this->level->getNextBlock();
+		return this->nextBlock;
+	}
+	
 }
 
 block* grid::returnNextBlock() {
 	return this->nextBlock;
 }
 
-void grid::setCurrentBlock(block* b) {
+bool grid::setCurrentBlock(block* b) {
 	currentBlock = b;
-	currentBlock->initialize(this->board, level->getLevel());
+	gameOver=currentBlock->initialize(this->board, level->getLevel());
+	return gameOver;
 }
 
 void grid::setNextBlock(block* b) {

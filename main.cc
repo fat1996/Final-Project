@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
 	srand(seed); // Random seed is set
 	grid *g = new grid;
 	g->SetBoard(level, scriptfile);
-	g->DrawBoard();
+	g->DrawBoard(level, highScore);
 
 	string command;
 	while (cin >> command) {
@@ -207,7 +207,8 @@ int main(int argc, char *argv[]) {
 					g->getCurrentBlock()->updateBoard(g->returnBoard());
 					bool cleared = g->getCurrentBlock()->updateScore(g->returnBoard(), 
 						     g->getCurrentBlock()->updateRows(g->returnRows(), g->returnBoard()),
-					             v, counter, g->returnCurScore(), highScore, level, count);			
+					             v, counter, g->returnCurScore(), highScore, level, count);		
+					             g->getCurrentBlock()->updateBoard(g->returnBoard());	
 					if (level == 4 && !cleared) {
 						++movesWithoutClearingRow;
 						if (movesWithoutClearingRow == 5) {
@@ -220,9 +221,16 @@ int main(int argc, char *argv[]) {
 						}
 					}
 			 		if (randomSeq == true) {
-						g->getNextBlock();
+						
+						block *b=g->getNextBlock();
+						if(b==nullptr){
+							cout<<"GAME OVER"<<endl;
+						}
 					} else {
-						g->setCurrentBlock(g->returnNextBlock());
+						bool b=g->setCurrentBlock(g->returnNextBlock());
+						if(b==false){
+							cout<<"GAME OVER"<<endl;
+						}
 						g->setNextBlock(generateNorandomBlock());
 					}
 				} else if (command == "levelup") { 
@@ -270,12 +278,11 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			// TODO: Case draws board even if the command is invalid.
-			//FATIMA: ADD HEAVY FN HERE.
 			if (command == "down" || command == "left" || command == "right" || command == "clockwise" || command == "counterclockwise") {
 			g->getCurrentBlock()->Heavy(g->returnBoard());
 			g->getCurrentBlock()->updateBoard(g->returnBoard());
 			}
-			g->DrawBoard();
+			g->DrawBoard(level, highScore);
 			// reset repeat
 			repeat = 1;
 		}

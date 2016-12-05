@@ -7,8 +7,8 @@
 #include "block.h"
 
 class Level0 : public Level{
-	static int curPos; // position in sequence
-	std::vector<std::string> sequence; // sequence of blocks from file
+	static int curPos;
+	std::vector<std::string> sequence; // Sequence of blocks
  public:
  	Level0(std::string scriptfile);
 	~Level0();

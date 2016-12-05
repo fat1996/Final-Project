@@ -12,7 +12,7 @@ protected:
 public:
 	~history();
 	std::vector<Coordinate*> &accessGrid();
-	int& getLevel();
+	int &getLevel();
 };
 
 #endif

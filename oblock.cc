@@ -12,12 +12,12 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="O";
 }
 }
 
-void oblock::initialize(string** board, int level_num){
+bool oblock::initialize(string** board, int level_num){
 state=1;
 level=level_num;
 //set isHeavy.
@@ -31,8 +31,8 @@ else {
 carriedOver=new Coordinate;
 carriedOver->setCoord(3, 0);
 
-if(board[3][0]!=" " && board[3][1]!=" " && board[4][0]!=" " && board[4][1]!=" "){
-	cout<<"GAME OVER!!!!!"<<endl;
+if(board[3][0]!=" " || board[3][1]!=" " || board[4][0]!=" " || board[4][1]!=" "){
+	return false; //cout<<"GAME OVER!!!!!"<<endl;
 }
 else {
 	blockCoord[0]=new Coordinate;
@@ -51,18 +51,15 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="O";
 }
+return true;
 }
 }
 
 void oblock::clockwise(string** board){
-//call heavy function after every move.
-this->Heavy(board);
 }
 
 void oblock::anticlockwise(string** board){
-//call heavy function after every move.
-this->Heavy(board);
 }

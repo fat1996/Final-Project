@@ -13,9 +13,13 @@ using namespace std;
 StarBlock::StarBlock() : block{'*'} {}
 
 // Initializer
-void StarBlock::initialize(string** board, int level_num) {
+bool StarBlock::initialize(string** board, int level_num) {
 	level = level_num;
-	blockCoord[0]=new Coordinate;
+	if(board[3][6]!=" "){  //game over.
+		return false;
+	}
+	else{
+		blockCoord[0]=new Coordinate;
 	blockCoord[0]->setCoord(3, 6);
 
 	// Set other coordinates as 0 default: NEVER check/use them
@@ -27,6 +31,8 @@ void StarBlock::initialize(string** board, int level_num) {
 
 	blockCoord[3]=new Coordinate;
 	blockCoord[3]->setCoord(0, 0);
+	return true;
+	}
 }
 
 // Default destructor
@@ -42,8 +48,8 @@ void StarBlock::updateBoard(std::string** board) {
 	Coordinate *c = blockCoord[0]; // Only looks at first coordinate
 	int x = c->getX(c);
 	int y = c->getY(c);
-	cout << "running update board for star" << endl;
-	cout << "("<<x<<", "<<y<<")" << endl;
+	//cout << "running update board for star" << endl;
+	//cout << "("<<x<<", "<<y<<")" << endl;
 	board[x][y] = "*";
 }
 
@@ -80,7 +86,7 @@ void StarBlock::drop(map<int, int> returnRows, string** board, vector<history*> 
 			board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 			blockCoord[0]->setCoord(newX, y);
 			v.push_back(blockCoord[0]);
-			cout<<"New coord: "<< blockCoord[0]->getX(blockCoord[0]) <<", "<< blockCoord[0]->getY(blockCoord[0]) <<endl;
+			//cout<<"New coord: "<< blockCoord[0]->getX(blockCoord[0]) <<", "<< blockCoord[0]->getY(blockCoord[0]) <<endl;
 			break;
 		}
 
@@ -92,14 +98,14 @@ void StarBlock::drop(map<int, int> returnRows, string** board, vector<history*> 
 			board[x][y]=" ";  //the previous coordinates of the block are set to empty.
 			blockCoord[0]->setCoord(newX, y);
 			v.push_back(blockCoord[0]);
-			cout<<"New coord: "<< blockCoord[0]->getX(blockCoord[0]) <<", "<< blockCoord[0]->getY(blockCoord[0]) <<endl;
+			//cout<<"New coord: "<< blockCoord[0]->getX(blockCoord[0]) <<", "<< blockCoord[0]->getY(blockCoord[0]) <<endl;
 			break;
 		}
 	}
 
 	h->accessGrid()=v;
-	int size=h->accessGrid().size();
-	cout<<"SIZE: "<<size<<endl;
+	//int size=h->accessGrid().size();
+	//cout<<"SIZE: "<<size<<endl;
 	ongrid.push_back(h);
-	cout<<"Drop has been executed. size of array in grid.h"<<ongrid.size()<<endl;
+	//cout<<"Drop has been executed. size of array in grid.h"<<ongrid.size()<<endl;
 }

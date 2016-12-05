@@ -11,10 +11,10 @@ using namespace std;
 jblock::jblock() : block{'J'} {}
 
 void jblock::clockwise(string** board){
-cout<<"Current state of block: "<<state<<endl;
+//cout<<"Current state of block: "<<state<<endl;
 
 if(state==1){
-cout<<"Current coordinates: "<<endl;
+//cout<<"Current coordinates: "<<endl;
 Coordinate *c=blockCoord[0];
 int x=c->getX(c);
 int y=c->getY(c);
@@ -26,7 +26,7 @@ if(x1<x && y1<y){
 x=x1;
 y=y1;
 }}
-cout<<"Carried over: "<<x<<", "<<y<<endl;
+//cout<<"Carried over: "<<x<<", "<<y<<endl;
 carriedOver->setCoord(x, y);
 
 if((x+1)>bottomRow || (x-1)<topBorder || (x-1)<topBorder || (y+1)>(rightBorder-1)){}
@@ -162,15 +162,15 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="J";
 }
 }
 
-void jblock::initialize(string** board, int level_num){
+bool jblock::initialize(string** board, int level_num){
 state=1;
 level=level_num;
-cout<<"LEVEL OF BLOCK: "<<level<<endl;
+//cout<<"LEVEL OF BLOCK: "<<level<<endl;
 //set isHeavy.
 if(level_num<=2){
 	isHeavy=false;
@@ -182,8 +182,8 @@ else {
 carriedOver=new Coordinate;
 carriedOver->setCoord(3, 0);
 
-if(board[3][0]!=" " && board[4][0]!=" " && board[4][1]!=" " && board[4][2]!=" "){
-	cout<<"GAME OVER!!!!!"<<endl;
+if(board[3][0]!=" " || board[4][0]!=" " || board[4][1]!=" " || board[4][2]!=" "){
+	return false; //cout<<"GAME OVER!!!!!"<<endl;
 }
 else {
 	blockCoord[0]=new Coordinate;
@@ -202,8 +202,9 @@ for(int i=0;i<4;i++){
 Coordinate *c=blockCoord[i];
 int x=c->getX(c);
 int y=c->getY(c);
-cout<<"("<<x<<", "<<y<<")"<<endl;
+//cout<<"("<<x<<", "<<y<<")"<<endl;
 board[x][y]="J";
 }
+return true;
 }
 }

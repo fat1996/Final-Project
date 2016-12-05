@@ -20,7 +20,7 @@ class grid {
 
 public:
 	void SetBoard(int level_num, std::string scriptfile);   //this sets up the initial configuration of the board.
-	void DrawBoard();
+	void DrawBoard(int l, int hiScore);
 	void drawNextBlock();
 	bool &returnGameOver();
 	int &returnCurScore();
@@ -32,7 +32,7 @@ public:
 	block* getNextBlock();
 	block* returnNextBlock();
 	void setNextBlock(block* b);
-	void setCurrentBlock(block* b);
+	bool setCurrentBlock(block* b);
 	void levelUp();
 	void levelDown(std::string scriptfile);
 };

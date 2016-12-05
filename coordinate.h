@@ -7,6 +7,7 @@ int yCoord;
 
 public:
 	Coordinate setCoord(int x, int y);
+	~Coordinate();
 	void getCoord(Coordinate *c);
 	int getX(Coordinate *c);
 	int getY(Coordinate *c);

@@ -13,7 +13,7 @@ class StarBlock : public block {
  public:
  	~StarBlock();
  	StarBlock();
-	void initialize(std::string** board, int level_num);
+	bool initialize(std::string** board, int level_num);
  	void updateBoard(std::string** board) override;
 	void clockwise(std::string** board) override;
 	void anticlockwise(std::string** board) override;
